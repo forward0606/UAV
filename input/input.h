@@ -1,3 +1,6 @@
+#ifndef _INPUT_H
+#define _INPUT_H
+
 #include<iostream>
 #include<vector>
 using namespace std;
@@ -11,9 +14,16 @@ class Input{
     double B;
 public:
     Input(int num, double _B);
+    Input(const int &n);
+    Input(){};
     ~Input(){};
-    const int& get_num_of_node();
-    const vector<Coord>& get_nodes();
-    const double& get_B();
-    void display();
+    void set_num_of_node(int n);
+    void set_nodes(vector<Coord> v);
+    void set_B(double b);
+    const int& get_num_of_node()const;
+    const vector<Coord>& get_nodes()const;
+    const double& get_B()const;
+    void display()const;
 };
+
+#endif

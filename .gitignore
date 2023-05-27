@@ -1,2 +1,5 @@
 *.out
 *.o
+gg*
+*.gch
+.vscode/
