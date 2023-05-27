@@ -69,6 +69,10 @@ void MyAlgo::make_tree(){
     squares = Square::squares;
 }
 
+ MyAlgo::~MyAlgo(){
+    if(root != nullptr) delete root;
+ }
+
 int Square::get_id(){
     return id;
 }

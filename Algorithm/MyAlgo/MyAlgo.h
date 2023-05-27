@@ -53,6 +53,7 @@ class MyAlgo:public AlgorithmBase{
     double farthest_pair();
 public:
     MyAlgo(const Input &_input);
+    ~MyAlgo();
     void tree_travse();
     void tree_travse(Square *node);
     void display();
