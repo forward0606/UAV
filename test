@@ -1,0 +1,357 @@
+granularity_grid: 16
+this is MyAlgo!
+the origin input
+num_of_node, B
+5, 20
+list of node: x, y
+1 1
+8 8
+0 64
+64 64
+64 0
+the scaled input:
+num_of_node, B
+5, 20
+list of node: x, y
+0 0
+16 16
+0 64
+64 64
+64 0
+
+this is a square!
+id: 0
+node list size 5
+node list:
+0 0
+16 16
+0 64
+64 64
+64 0
+portal:
+U:
+0 64
+21.3333 64
+42.6667 64
+
+L:
+0 0
+0 21.3333
+0 42.6667
+
+R:
+64 64
+64 42.6667
+64 21.3333
+
+D:
+64 0
+42.6667 0
+21.3333 0
+
+corner:
+LU: 0 64
+LD: 0 0
+RU: 64 64
+RD: 64 0
+child id
+LU: 1
+LD: 2
+RU: 3
+RD: 4
+parent id: -1
+this is a square!
+id: 1
+node list size 1
+node list:
+0 64
+portal:
+U:
+0 64
+10.6667 64
+21.3333 64
+
+L:
+0 32
+0 42.6667
+0 53.3333
+
+R:
+32 64
+32 53.3333
+32 42.6667
+
+D:
+32 32
+21.3333 32
+10.6667 32
+
+corner:
+LU: 0 64
+LD: 0 32
+RU: 32 64
+RD: 32 32
+child id
+LU: -1
+LD: -1
+RU: -1
+RD: -1
+parent id: 0
+this is a square!
+id: 2
+node list size 2
+node list:
+0 0
+16 16
+portal:
+U:
+0 32
+10.6667 32
+21.3333 32
+
+L:
+0 0
+0 10.6667
+0 21.3333
+
+R:
+32 32
+32 21.3333
+32 10.6667
+
+D:
+32 0
+21.3333 0
+10.6667 0
+
+corner:
+LU: 0 32
+LD: 0 0
+RU: 32 32
+RD: 32 0
+child id
+LU: 5
+LD: 6
+RU: 7
+RD: 8
+parent id: 0
+this is a square!
+id: 5
+node list size 1
+node list:
+16 16
+portal:
+U:
+0 32
+5.33333 32
+10.6667 32
+
+L:
+0 16
+0 21.3333
+0 26.6667
+
+R:
+16 32
+16 26.6667
+16 21.3333
+
+D:
+16 16
+10.6667 16
+5.33333 16
+
+corner:
+LU: 0 32
+LD: 0 16
+RU: 16 32
+RD: 16 16
+child id
+LU: -1
+LD: -1
+RU: -1
+RD: -1
+parent id: 2
+this is a square!
+id: 6
+node list size 1
+node list:
+0 0
+portal:
+U:
+0 16
+5.33333 16
+10.6667 16
+
+L:
+0 0
+0 5.33333
+0 10.6667
+
+R:
+16 16
+16 10.6667
+16 5.33333
+
+D:
+16 0
+10.6667 0
+5.33333 0
+
+corner:
+LU: 0 16
+LD: 0 0
+RU: 16 16
+RD: 16 0
+child id
+LU: -1
+LD: -1
+RU: -1
+RD: -1
+parent id: 2
+this is a square!
+id: 7
+node list size 0
+node list:
+portal:
+U:
+16 32
+21.3333 32
+26.6667 32
+
+L:
+16 16
+16 21.3333
+16 26.6667
+
+R:
+32 32
+32 26.6667
+32 21.3333
+
+D:
+32 16
+26.6667 16
+21.3333 16
+
+corner:
+LU: 16 32
+LD: 16 16
+RU: 32 32
+RD: 32 16
+child id
+LU: -1
+LD: -1
+RU: -1
+RD: -1
+parent id: 2
+this is a square!
+id: 8
+node list size 0
+node list:
+portal:
+U:
+16 16
+21.3333 16
+26.6667 16
+
+L:
+16 0
+16 5.33333
+16 10.6667
+
+R:
+32 16
+32 10.6667
+32 5.33333
+
+D:
+32 0
+26.6667 0
+21.3333 0
+
+corner:
+LU: 16 16
+LD: 16 0
+RU: 32 16
+RD: 32 0
+child id
+LU: -1
+LD: -1
+RU: -1
+RD: -1
+parent id: 2
+this is a square!
+id: 3
+node list size 1
+node list:
+64 64
+portal:
+U:
+32 64
+42.6667 64
+53.3333 64
+
+L:
+32 32
+32 42.6667
+32 53.3333
+
+R:
+64 64
+64 53.3333
+64 42.6667
+
+D:
+64 32
+53.3333 32
+42.6667 32
+
+corner:
+LU: 32 64
+LD: 32 32
+RU: 64 64
+RD: 64 32
+child id
+LU: -1
+LD: -1
+RU: -1
+RD: -1
+parent id: 0
+this is a square!
+id: 4
+node list size 1
+node list:
+64 0
+portal:
+U:
+32 32
+42.6667 32
+53.3333 32
+
+L:
+32 0
+32 10.6667
+32 21.3333
+
+R:
+64 32
+64 21.3333
+64 10.6667
+
+D:
+64 0
+53.3333 0
+42.6667 0
+
+corner:
+LU: 32 32
+LD: 32 0
+RU: 64 32
+RD: 64 0
+child id
+LU: -1
+LD: -1
+RU: -1
+RD: -1
+parent id: 0

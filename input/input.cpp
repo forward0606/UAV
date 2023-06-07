@@ -57,6 +57,6 @@ void Input::display()const{
     cout<<num_of_node<<", "<<B<<endl;
     cout<<"list of node: x, y"<<endl;
     for(auto u:nodes){
-        cout<<u.x<<", "<<u.y<<endl;
+        cout<<u.x<<" "<<u.y<<endl;
     }
 }
