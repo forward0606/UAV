@@ -8,7 +8,7 @@ public:
     const double epsilon;
     const double k;
     Parameter()
-        :m(2), r(3), epsilon(0.5), k(4){}
+        :m(0), r(3), epsilon(0.5), k(4){}
 };
 
 #endif

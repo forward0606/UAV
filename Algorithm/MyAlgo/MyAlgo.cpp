@@ -56,17 +56,19 @@ void MyAlgo::display(){
 
 void MyAlgo::make_tree(){
     Coord upleft = scaled_input.get_nodes()[0], down_right=scaled_input.get_nodes()[0];
+    // find the x, y position of the biggest square
     for(auto i:scaled_input.get_nodes()){
         upleft.x = min(upleft.x, i.x);
         down_right.x = max(down_right.x, i.x);
         upleft.y = max(upleft.y, i.y);
         down_right.y = min(down_right.y, i.y);
     }
-    Square::counter = 0;
-    Square::squares.clear();
+    
+    Square::counter = 0;                            // computes the size of the tree
+    Square::squares.clear();                        // store every square node in a vector
     root = new Square(upleft, down_right, scaled_input.get_nodes(), nullptr);
     root->make_tree_dfs();
-    squares = Square::squares;
+    squares = Square::squares
 }
 
  MyAlgo::~MyAlgo(){
@@ -164,7 +166,7 @@ void Square::make_tree_dfs(){
 
 
 Square::Square(Coord _upleft, Coord _downright, vector<Coord> _node_list, Square *_parent)
-    :id(counter++), node_list(_node_list), parent(_parent){
+    :id(counter++), node_list(_node_list), parent(_parent), table_enable(false){
     for(int i=0;i<4;i++){
         children[i] = nullptr;
     }
@@ -197,4 +199,107 @@ Square::~Square(){
             children[i] = nullptr;
         }
     }
+}
+
+void Square::go_permutation(){
+    
+    //store all choosed portal in vector v
+    vector<Portal_id> v;
+    for(int dir = 0; dir < 4; dir++){
+        for(int id = 0; id < par.r; id++){
+            if(choose[dir][id] != -1){
+                v.emplace_back(dir, id);
+            }
+        }
+    }
+    
+    // construct PT table
+    map<pair<Portal_id, Portal_id>, double> mp;
+    sort(v.begin(), v.end());                   // permutation from small to big
+    do {
+        mp.clear();
+        vector<vector<Coord>> C;
+        vector<Coord> path;
+        for(int i=0;i<(int)v.size();i+=2){
+            path.clear();
+            if(v[i] < v[i+1])
+                mp[make_pair(v[i], v[i+1])] = distance_with_bound(v[i], v[i+1]);
+            else
+                mp[make_pair(v[i+1], v[i])] = distance_with_bound(v[i], v[i+1]);
+            path.emplace_back(get_Portal_Coord(v[i]));
+            path.emplace_back(get_Portal_Coord(v[i+1]));
+            C.emplace_back(path);
+        }
+        dp_table[mp] = Dp_value(0, C);
+    } while (next_permutation(v.begin(), v.end()));
+}
+
+double Square::distance_with_bound(const Portal_id &a, const Portal_id &b)const{
+    // return rounded distance between two portals
+    Coord p1 = get_Portal_Coord(a);
+    Coord p2 = get_Portal_Coord(b);
+    double dis = AlgorithmBase::distance(p1, p2);
+    return myround(dis);
+}
+
+double Square::myround(double dis)const{
+    // what's round function?
+    return dis;
+}
+
+
+Coord Square::get_Portal_Coord(const Portal_id &p_id)const{
+    return portal[p_id.dir][p_id.id];
+}
+
+void Square::f(int dir, int id){
+    // recursize for choose porta
+    if(id == par.r){
+        dir += 1;
+        id = 0;
+    }
+    if(dir == 4){
+        //find a case
+        go_permutation();
+        return;
+    }
+    f(dir, id+1);               //not choose
+    for(int i=0;i<=par.m;i++){
+        choose[dir][id] = i;    //choose ith portal
+        f(dir, id+1);
+    }
+}
+
+map<map<pair<Portal_id, Portal_id>, double>, Dp_value> Square::find_dp_table(){
+    if(table_enable){
+        // the dp_table is construct before
+        return dp_table;
+    }
+    
+    if(is_leaf()){
+        for(int dir=0;dir<4;dir++){
+            choose[dir].resize(par.r, -1);
+        }
+        //choose[dir][j] --> dir 的邊的第 j 個選擇的 id
+
+    }
+    return dp_table;
+}
+
+
+Dp_value::Dp_value(const int &_t, const vector<vector<Coord>> &_C)
+        :t(_t), C(_C){}
+bool Dp_value::operator <(const Dp_value &right)const{
+    if(t != right.t){
+        return t < right.t;
+    }
+    return C.size() < right.C.size();
+}
+
+Portal_id::Portal_id(int _dir, int _id)
+    :dir(_dir), id(_id){}
+Portal_id::Portal_id(){}
+bool Portal_id::operator<(const Portal_id &right)const{
+    if(dir != right.dir)    return dir < right.dir;
+    return id < right.id;
 }
