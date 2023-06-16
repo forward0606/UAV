@@ -15,16 +15,37 @@ double MyAlgo::farthest_pair(){
 }
 
 void MyAlgo::Rescale(){
-    //parameter for cutting square length in rounding
-    double granularity_grid = par.epsilon * farthest_pair() / (8 * par.k * input.get_num_of_node());
-    granularity_grid = 16;
-    cout<<"granularity_grid: "<<granularity_grid<<endl;
-    scaled_input.set_num_of_node(input.get_num_of_node());
+    /*
+        先找 L --> max(mxx-mix, mxy-miy)
+        縮放 ceiling(8n/epsilon) / L 倍 
+        令 block = 4
+        把縮放後的每個點(x, y) -> (round(x/block)*block, round(y/block)*block)
+    */
+    // find L
+    Coord up_left = input.get_nodes()[0], down_right = input.get_nodes()[0];
+    for(auto i : input.get_nodes()){
+        up_left.x = min(up_left.x, i.x);
+        down_right.x = max(down_right.x, i.x);
+        up_left.y = max(up_left.y, i.y);
+        down_right.y = min(down_right.y, i.y);
+    }
+    // L = max(x axis distance, y axis distance)
+    double L = max(down_right.x - up_left.x, up_left.y - down_right.y);
+    // node num
+    int n = input.get_nodes().size();
+    scaled_input.set_num_of_node(n);
+    // set cost B
     scaled_input.set_B(input.get_B());
+    // scale L * ratio =  ceil(8n/eplsion) 
+    double ratio = ceil(8 * n / par.epsilon) / L;
+    // each square size
+    double block = 4; 
+    // scale coordinate with ratio and shift the min x to y axis, min y to x axis
+    // rounding to block
     vector<Coord> v;
-    for(auto i: input.get_nodes()){
-        //v.emplace_back(round(i.x / granularity_grid) * 8, round(i.y / granularity_grid) * 8);
-        v.emplace_back(round(i.x / granularity_grid)*granularity_grid, round(i.y / granularity_grid)*granularity_grid);
+    for(auto i : input.get_nodes()){
+        // 超越？！
+        v.emplace_back(round((i.x-up_left.x) * ratio / block) * block, round((i.y-down_right.y) * ratio / block) * block);
     }
     scaled_input.set_nodes(v);
 }
@@ -55,16 +76,21 @@ void MyAlgo::display(){
 }
 
 void MyAlgo::make_tree(){
-    Coord upleft = scaled_input.get_nodes()[0], down_right=scaled_input.get_nodes()[0];
+    Coord up_left = scaled_input.get_nodes()[0], down_right=scaled_input.get_nodes()[0];
     for(auto i:scaled_input.get_nodes()){
-        upleft.x = min(upleft.x, i.x);
+        up_left.x = min(up_left.x, i.x);
         down_right.x = max(down_right.x, i.x);
-        upleft.y = max(upleft.y, i.y);
+        up_left.y = max(up_left.y, i.y);
         down_right.y = min(down_right.y, i.y);
+    }
+    double L = max(down_right.x - up_left.x, up_left.y - down_right.y);
+    double L_plum  = 1;
+    while(L_plum < L){
+        L_plum *= 2;
     }
     Square::counter = 0;
     Square::squares.clear();
-    root = new Square(upleft, down_right, scaled_input.get_nodes(), nullptr);
+    root = new Square(Coord(0, L_plum), Coord(L_plum, 0), scaled_input.get_nodes(), nullptr);
     root->make_tree_dfs();
     squares = Square::squares;
 }

@@ -1,4 +1,3 @@
-granularity_grid: 16
 this is MyAlgo!
 the origin input
 num_of_node, B
@@ -14,40 +13,32 @@ num_of_node, B
 5, 20
 list of node: x, y
 0 0
-16 16
-0 64
-64 64
-64 0
+4 4
+0 40
+40 40
+40 0
 
 this is a square!
 id: 0
 node list size 5
 node list:
 0 0
-16 16
-0 64
-64 64
-64 0
+4 4
+0 40
+40 40
+40 0
 portal:
 U:
 0 64
-21.3333 64
-42.6667 64
 
 L:
 0 0
-0 21.3333
-0 42.6667
 
 R:
 64 64
-64 42.6667
-64 21.3333
 
 D:
 64 0
-42.6667 0
-21.3333 0
 
 corner:
 LU: 0 64
@@ -64,27 +55,19 @@ this is a square!
 id: 1
 node list size 1
 node list:
-0 64
+0 40
 portal:
 U:
 0 64
-10.6667 64
-21.3333 64
 
 L:
 0 32
-0 42.6667
-0 53.3333
 
 R:
 32 64
-32 53.3333
-32 42.6667
 
 D:
 32 32
-21.3333 32
-10.6667 32
 
 corner:
 LU: 0 64
@@ -102,27 +85,19 @@ id: 2
 node list size 2
 node list:
 0 0
-16 16
+4 4
 portal:
 U:
 0 32
-10.6667 32
-21.3333 32
 
 L:
 0 0
-0 10.6667
-0 21.3333
 
 R:
 32 32
-32 21.3333
-32 10.6667
 
 D:
 32 0
-21.3333 0
-10.6667 0
 
 corner:
 LU: 0 32
@@ -137,29 +112,20 @@ RD: 8
 parent id: 0
 this is a square!
 id: 5
-node list size 1
+node list size 0
 node list:
-16 16
 portal:
 U:
 0 32
-5.33333 32
-10.6667 32
 
 L:
 0 16
-0 21.3333
-0 26.6667
 
 R:
 16 32
-16 26.6667
-16 21.3333
 
 D:
 16 16
-10.6667 16
-5.33333 16
 
 corner:
 LU: 0 32
@@ -174,29 +140,22 @@ RD: -1
 parent id: 2
 this is a square!
 id: 6
-node list size 1
+node list size 2
 node list:
 0 0
+4 4
 portal:
 U:
 0 16
-5.33333 16
-10.6667 16
 
 L:
 0 0
-0 5.33333
-0 10.6667
 
 R:
 16 16
-16 10.6667
-16 5.33333
 
 D:
 16 0
-10.6667 0
-5.33333 0
 
 corner:
 LU: 0 16
@@ -204,11 +163,239 @@ LD: 0 0
 RU: 16 16
 RD: 16 0
 child id
+LU: 9
+LD: 10
+RU: 11
+RD: 12
+parent id: 2
+this is a square!
+id: 9
+node list size 0
+node list:
+portal:
+U:
+0 16
+
+L:
+0 8
+
+R:
+8 16
+
+D:
+8 8
+
+corner:
+LU: 0 16
+LD: 0 8
+RU: 8 16
+RD: 8 8
+child id
 LU: -1
 LD: -1
 RU: -1
 RD: -1
-parent id: 2
+parent id: 6
+this is a square!
+id: 10
+node list size 2
+node list:
+0 0
+4 4
+portal:
+U:
+0 8
+
+L:
+0 0
+
+R:
+8 8
+
+D:
+8 0
+
+corner:
+LU: 0 8
+LD: 0 0
+RU: 8 8
+RD: 8 0
+child id
+LU: 13
+LD: 14
+RU: 15
+RD: 16
+parent id: 6
+this is a square!
+id: 13
+node list size 1
+node list:
+4 4
+portal:
+U:
+0 8
+
+L:
+0 4
+
+R:
+4 8
+
+D:
+4 4
+
+corner:
+LU: 0 8
+LD: 0 4
+RU: 4 8
+RD: 4 4
+child id
+LU: -1
+LD: -1
+RU: -1
+RD: -1
+parent id: 10
+this is a square!
+id: 14
+node list size 1
+node list:
+0 0
+portal:
+U:
+0 4
+
+L:
+0 0
+
+R:
+4 4
+
+D:
+4 0
+
+corner:
+LU: 0 4
+LD: 0 0
+RU: 4 4
+RD: 4 0
+child id
+LU: -1
+LD: -1
+RU: -1
+RD: -1
+parent id: 10
+this is a square!
+id: 15
+node list size 0
+node list:
+portal:
+U:
+4 8
+
+L:
+4 4
+
+R:
+8 8
+
+D:
+8 4
+
+corner:
+LU: 4 8
+LD: 4 4
+RU: 8 8
+RD: 8 4
+child id
+LU: -1
+LD: -1
+RU: -1
+RD: -1
+parent id: 10
+this is a square!
+id: 16
+node list size 0
+node list:
+portal:
+U:
+4 4
+
+L:
+4 0
+
+R:
+8 4
+
+D:
+8 0
+
+corner:
+LU: 4 4
+LD: 4 0
+RU: 8 4
+RD: 8 0
+child id
+LU: -1
+LD: -1
+RU: -1
+RD: -1
+parent id: 10
+this is a square!
+id: 11
+node list size 0
+node list:
+portal:
+U:
+8 16
+
+L:
+8 8
+
+R:
+16 16
+
+D:
+16 8
+
+corner:
+LU: 8 16
+LD: 8 8
+RU: 16 16
+RD: 16 8
+child id
+LU: -1
+LD: -1
+RU: -1
+RD: -1
+parent id: 6
+this is a square!
+id: 12
+node list size 0
+node list:
+portal:
+U:
+8 8
+
+L:
+8 0
+
+R:
+16 8
+
+D:
+16 0
+
+corner:
+LU: 8 8
+LD: 8 0
+RU: 16 8
+RD: 16 0
+child id
+LU: -1
+LD: -1
+RU: -1
+RD: -1
+parent id: 6
 this is a square!
 id: 7
 node list size 0
@@ -216,23 +403,15 @@ node list:
 portal:
 U:
 16 32
-21.3333 32
-26.6667 32
 
 L:
 16 16
-16 21.3333
-16 26.6667
 
 R:
 32 32
-32 26.6667
-32 21.3333
 
 D:
 32 16
-26.6667 16
-21.3333 16
 
 corner:
 LU: 16 32
@@ -252,23 +431,15 @@ node list:
 portal:
 U:
 16 16
-21.3333 16
-26.6667 16
 
 L:
 16 0
-16 5.33333
-16 10.6667
 
 R:
 32 16
-32 10.6667
-32 5.33333
 
 D:
 32 0
-26.6667 0
-21.3333 0
 
 corner:
 LU: 16 16
@@ -285,27 +456,19 @@ this is a square!
 id: 3
 node list size 1
 node list:
-64 64
+40 40
 portal:
 U:
 32 64
-42.6667 64
-53.3333 64
 
 L:
 32 32
-32 42.6667
-32 53.3333
 
 R:
 64 64
-64 53.3333
-64 42.6667
 
 D:
 64 32
-53.3333 32
-42.6667 32
 
 corner:
 LU: 32 64
@@ -322,27 +485,19 @@ this is a square!
 id: 4
 node list size 1
 node list:
-64 0
+40 0
 portal:
 U:
 32 32
-42.6667 32
-53.3333 32
 
 L:
 32 0
-32 10.6667
-32 21.3333
 
 R:
 64 32
-64 21.3333
-64 10.6667
 
 D:
 64 0
-53.3333 0
-42.6667 0
 
 corner:
 LU: 32 32
