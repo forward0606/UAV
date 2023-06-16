@@ -95,16 +95,151 @@ void MyAlgo::make_tree(){
     squares = Square::squares;
 }
 
- MyAlgo::~MyAlgo(){
+MyAlgo::~MyAlgo(){
     if(root != nullptr) delete root;
- }
+}
+
+map<map<int, int>, double>  MyAlgo::get_dp_table(){
+    return root->get_dp_table();
+}
+
+Portal_id::Portal_id(int _dir, int _idx)
+    :dir(_dir), idx(_idx){}
 
 int Square::get_id(){
     return id;
 }
 
+
 Square *Square::get_child(int idx){
     return children[idx];
+}
+
+void Square::find_portal_pairs(){
+    portal_pairs.clear();
+    vector<Portal_id> v;
+    for(int dir=0;dir<4;dir++){
+        for(int i=0;i<=par.m;i++){
+            v.emplace_back(dir, i);
+        }
+    }
+    for(int idx1 = 0;idx1<(int)v.size();idx1++){
+        for(int idx2 = idx1+1;idx2<(int)v.size();idx2++){
+            portal_pairs.emplace_back(v[idx1], v[idx2]);
+        }
+    }
+}
+
+int Square::Line_Segment_Test::point_location_test(Coord p1, Coord p2, Coord p3){
+    // check the location of p3 is on the (LEFT/RIGHT/TOUCH) of the line
+    
+    assert(p1 != p2);                                           //no line found
+    pair<double, double> u = {p2.x - p1.x, p2.y - p1.y};
+    pair<double, double> v = {p3.x - p1.x, p3.y - p1.y};
+    double cross_product = u.x * v.y - u.y * v.x;
+    if(cross_product == 0){
+        return ON_LINE;
+    }else if(cross_product > 0){
+        return LEFT;
+    }else{
+        return RIGHT;
+    }
+}
+
+bool Square::Line_Segment_Test::on_segment(Coord a, Coord b, Coord c){
+    // c is on the segment or not
+    // a, b, c are located on  the same line
+    if(a.x > b.x)   swap(a, b);
+    if(a.x <= c.x && c.x <= b.x && min(a.y, b.y) <= c.y && c.y <= max(a.y, b.y)){
+        return true;
+    }
+    return false;
+}
+bool Square::Line_Segment_Test::line_segment_intersection(Coord a, Coord b, Coord c, Coord d){
+    int o1 = point_location_test(a, b, c);
+    int o2 = point_location_test(a, b, d);
+    int o3 = point_location_test(c, d, a);
+    int o4 = point_location_test(c, d, b);
+    
+    if(o1 != o2 && o3 != o4){return true;}
+    if(o1 == 0 && on_segment(a, b, c)){return true;}
+    if(o2 == 0 && on_segment(a, b, d)){return true;}
+    if(o3 == 0 && on_segment(c, d, a)){return true;}
+    if(o4 == 0 && on_segment(c, d, b)){return true;}
+    return false;
+}
+
+bool Square::is_crossing(vector<int> P){
+    pair<Portal_id, Portal_id> last = portal_pairs[P.back()];
+    Coord a = get_Portal_Coord(last.first);
+    Coord b = get_Portal_Coord(last.second);
+    for(int i=0;i<(int)P.size()-1;i++){
+        pair<Portal_id, Portal_id> path = portal_pairs[P[i]];
+        Coord c = get_Portal_Coord(path.first);
+        Coord d = get_Portal_Coord(path.second);
+        if(Line_Segment_Test::line_segment_intersection(a, b, c, d)){
+           return true; 
+        }
+    }
+    return false;
+}
+
+bool Square::over_r_limit(vector<int> P){
+    int dir_cnt[4] = {0};
+    for(int i=0;i<(int)P.size();i++){
+        pair<Portal_id, Portal_id> path = portal_pairs[P[i]];
+        dir_cnt[path.first.dir] ++;
+        dir_cnt[path.second.dir] ++;
+    }
+    for(int dir=0;dir<4;dir++){
+        if(dir_cnt[dir] > par.r)  return true;
+    }
+    return false;
+}
+
+Coord Square::get_Portal_Coord(const Portal_id &p_id)const{
+    return portal[p_id.dir][p_id.idx];
+}
+
+void Square::find_P_sets(int path_num, int start, vector<int> &P){
+    // check crossing
+    if(is_crossing(P)){
+        return;
+    }
+    if(over_r_limit(P)){
+        return;
+    }
+    // store the state
+    map<int, int> mp;
+    for(int i=0;i<(int)P.size();i++){
+        mp[P[i]]++;
+    }
+    P_sets.emplace_back(mp);
+
+    if(path_num == 2 * par.r){
+        return;
+    }
+    for(int idx = start;idx<(int)portal_pairs.size();idx++){
+        P[path_num] = idx;
+        find_P_sets(path_num+1, idx, P);
+    }
+}
+
+void Square::find_P_sets(){
+    /*
+        先把 portal 做兩兩配對
+        portal 配對用 vector<Portal_id, Portal_id> 存 --> 雙迴圈 for loop
+        檢查 cross --> 剪枝
+        檢查同一條邊走得次數是否超過 r --> 剪枝
+        選 1, 2, ..., 2r 條 path，且每一種組合存成一個 map<int, int> --> {key: portal組合_idx, value: 選幾次}
+        把所有組合的 map 塞進一個 vector<map<int, int>> 中，此 vector 為 dp state 中 P 的所有可能
+	    把 vector<Portal_id, Portal_id>,  vector<map<int, int>> 存成 global 讓所有 dp state 都可以存取
+    */
+    if(P_sets_isable)return;
+    find_portal_pairs();
+    vector<int> P(2 * par.r);
+    find_P_sets(0, 0, P);
+    P_sets_isable = true;
 }
 
 void Square::display(){
@@ -160,6 +295,39 @@ void Square::display(){
     cout<<"parent id: "<<(parent==nullptr?-1:parent->id)<<endl;
 }
 
+map<map<int, int>, double> Square::get_dp_table(){
+    cout<<"Square::get_dp_table()"<<endl;
+    cout<<"id "<<id<<endl;
+    if(dp_table_isable){
+        return dp_table;
+    }
+    dp_table.clear();
+    if(node_list.size() == 0){
+        cout<<"node_list == 0"<<endl;
+        for(auto p:P_sets){
+            double distance_sum = 0;
+            for(auto it:p){
+                pair<Portal_id, Portal_id> last = portal_pairs[it.first];
+                Coord a = get_Portal_Coord(last.first);
+                Coord b = get_Portal_Coord(last.second);
+                cout<<"entry(x, y) = ("<<a.x<<", "<<a.y<<"), exit(x, y) = ("<<b.x<<", "<<b.y<<")\n";
+                distance_sum += AlgorithmBase::distance(a, b) * it.second;
+            }
+            cout<<"distance_sum = "<<distance_sum<<'\n';
+            dp_table[p] = distance_sum;
+        }
+        dp_table_isable = true;
+        return dp_table;
+    }
+    //if(node_list)
+    for(int i=0;i<4;i++){
+        if(children[i] != nullptr){
+            children[i]->get_dp_table();
+        }
+    }
+}
+
+
 void Square::make_tree_dfs(){
     if(is_leaf()){
         return;
@@ -190,7 +358,7 @@ void Square::make_tree_dfs(){
 
 
 Square::Square(Coord _upleft, Coord _downright, vector<Coord> _node_list, Square *_parent)
-    :id(counter++), node_list(_node_list), parent(_parent){
+    :id(counter++), node_list(_node_list), parent(_parent), dp_table_isable(false){
     for(int i=0;i<4;i++){
         children[i] = nullptr;
     }

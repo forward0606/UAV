@@ -17,7 +17,7 @@ public:
     AlgorithmBase(const string &algo_name, const Input &_input);
     ~AlgorithmBase(){};
     string get_algo_name();
-    double distance(Coord p1, Coord p2);
+    static double distance(Coord p1, Coord p2);
     // void run();
 };
 

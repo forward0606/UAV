@@ -8,4 +8,5 @@ int main(){
     algo.display();
     algo.make_tree();
     algo.tree_travse();
+    algo.get_dp_table();
 }

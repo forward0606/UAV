@@ -510,3 +510,7 @@ LD: -1
 RU: -1
 RD: -1
 parent id: 0
+Square::get_dp_table()
+id 0
+Square::get_dp_table()
+id 1
