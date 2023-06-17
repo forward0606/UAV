@@ -7,6 +7,7 @@
 #include <set>
 #include <algorithm>
 #include <cassert>
+#include <omp.h>
 #define EPS 1e-9
 
 

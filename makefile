@@ -1,4 +1,4 @@
-compile_parameter = g++ -g -Wall -Wextra 
+compile_parameter = g++ -g -Wall -Wextra -std=gnu++1z
 
 all: MyAlgo.o
 
@@ -18,7 +18,7 @@ Square.o: Algorithm/MyAlgo/Parameter.h Algorithm/MyAlgo/Square.h Algorithm/MyAlg
 	$(compile_parameter) -c Algorithm/MyAlgo/Parameter.h Algorithm/MyAlgo/Square.h Algorithm/MyAlgo/Square.cpp
 
 test_MyAlgo.out: input.o AlgorithmBase.o MyAlgo.o Algorithm/MyAlgo/testMyAlgo.cpp Square.o
-	$(compile_parameter) Algorithm/MyAlgo/testMyAlgo.cpp input.o AlgorithmBase.o MyAlgo.o Square.o -o test_MyAlgo.out 
+	$(compile_parameter) -fopenmp Algorithm/MyAlgo/testMyAlgo.cpp input.o AlgorithmBase.o MyAlgo.o Square.o -o test_MyAlgo.out 
 	
 run: test_MyAlgo.out
 	./test_MyAlgo.out
