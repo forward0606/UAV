@@ -514,3 +514,290 @@ Square::get_dp_table()
 id 0
 Square::get_dp_table()
 id 1
+Square::get_dp_table()
+id 2
+Square::get_dp_table()
+id 5
+node_list == 0
+find portal pairs
+This is a portal: dir = 0, idx = 0
+This is a portal: dir = 1, idx = 0
+This is a portal: dir = 0, idx = 0
+This is a portal: dir = 2, idx = 0
+This is a portal: dir = 0, idx = 0
+This is a portal: dir = 3, idx = 0
+This is a portal: dir = 1, idx = 0
+This is a portal: dir = 2, idx = 0
+This is a portal: dir = 1, idx = 0
+This is a portal: dir = 3, idx = 0
+This is a portal: dir = 2, idx = 0
+This is a portal: dir = 3, idx = 0
+distance_sum = 0
+entry(x, y) = (0, 32), exit(x, y) = (0, 16)
+distance_sum = 16
+entry(x, y) = (0, 32), exit(x, y) = (0, 16)
+entry(x, y) = (16, 32), exit(x, y) = (16, 16)
+distance_sum = 32
+entry(x, y) = (0, 32), exit(x, y) = (16, 32)
+distance_sum = 16
+entry(x, y) = (0, 32), exit(x, y) = (16, 32)
+entry(x, y) = (0, 16), exit(x, y) = (16, 16)
+distance_sum = 32
+entry(x, y) = (0, 32), exit(x, y) = (16, 16)
+distance_sum = 22.6274
+entry(x, y) = (0, 16), exit(x, y) = (16, 32)
+distance_sum = 22.6274
+entry(x, y) = (0, 16), exit(x, y) = (16, 16)
+distance_sum = 16
+entry(x, y) = (16, 32), exit(x, y) = (16, 16)
+distance_sum = 16
+Square::get_dp_table()
+id 6
+Square::get_dp_table()
+id 9
+node_list == 0
+This is a portal: dir = 0, idx = 0
+This is a portal: dir = 1, idx = 0
+This is a portal: dir = 0, idx = 0
+This is a portal: dir = 2, idx = 0
+This is a portal: dir = 0, idx = 0
+This is a portal: dir = 3, idx = 0
+This is a portal: dir = 1, idx = 0
+This is a portal: dir = 2, idx = 0
+This is a portal: dir = 1, idx = 0
+This is a portal: dir = 3, idx = 0
+This is a portal: dir = 2, idx = 0
+This is a portal: dir = 3, idx = 0
+distance_sum = 0
+entry(x, y) = (0, 16), exit(x, y) = (0, 8)
+distance_sum = 8
+entry(x, y) = (0, 16), exit(x, y) = (0, 8)
+entry(x, y) = (8, 16), exit(x, y) = (8, 8)
+distance_sum = 16
+entry(x, y) = (0, 16), exit(x, y) = (8, 16)
+distance_sum = 8
+entry(x, y) = (0, 16), exit(x, y) = (8, 16)
+entry(x, y) = (0, 8), exit(x, y) = (8, 8)
+distance_sum = 16
+entry(x, y) = (0, 16), exit(x, y) = (8, 8)
+distance_sum = 11.3137
+entry(x, y) = (0, 8), exit(x, y) = (8, 16)
+distance_sum = 11.3137
+entry(x, y) = (0, 8), exit(x, y) = (8, 8)
+distance_sum = 8
+entry(x, y) = (8, 16), exit(x, y) = (8, 8)
+distance_sum = 8
+Square::get_dp_table()
+id 10
+Square::get_dp_table()
+id 13
+Square::get_dp_table()
+id 14
+Square::get_dp_table()
+id 15
+node_list == 0
+This is a portal: dir = 0, idx = 0
+This is a portal: dir = 1, idx = 0
+This is a portal: dir = 0, idx = 0
+This is a portal: dir = 2, idx = 0
+This is a portal: dir = 0, idx = 0
+This is a portal: dir = 3, idx = 0
+This is a portal: dir = 1, idx = 0
+This is a portal: dir = 2, idx = 0
+This is a portal: dir = 1, idx = 0
+This is a portal: dir = 3, idx = 0
+This is a portal: dir = 2, idx = 0
+This is a portal: dir = 3, idx = 0
+distance_sum = 0
+entry(x, y) = (4, 8), exit(x, y) = (4, 4)
+distance_sum = 4
+entry(x, y) = (4, 8), exit(x, y) = (4, 4)
+entry(x, y) = (8, 8), exit(x, y) = (8, 4)
+distance_sum = 8
+entry(x, y) = (4, 8), exit(x, y) = (8, 8)
+distance_sum = 4
+entry(x, y) = (4, 8), exit(x, y) = (8, 8)
+entry(x, y) = (4, 4), exit(x, y) = (8, 4)
+distance_sum = 8
+entry(x, y) = (4, 8), exit(x, y) = (8, 4)
+distance_sum = 5.65685
+entry(x, y) = (4, 4), exit(x, y) = (8, 8)
+distance_sum = 5.65685
+entry(x, y) = (4, 4), exit(x, y) = (8, 4)
+distance_sum = 4
+entry(x, y) = (8, 8), exit(x, y) = (8, 4)
+distance_sum = 4
+Square::get_dp_table()
+id 16
+node_list == 0
+This is a portal: dir = 0, idx = 0
+This is a portal: dir = 1, idx = 0
+This is a portal: dir = 0, idx = 0
+This is a portal: dir = 2, idx = 0
+This is a portal: dir = 0, idx = 0
+This is a portal: dir = 3, idx = 0
+This is a portal: dir = 1, idx = 0
+This is a portal: dir = 2, idx = 0
+This is a portal: dir = 1, idx = 0
+This is a portal: dir = 3, idx = 0
+This is a portal: dir = 2, idx = 0
+This is a portal: dir = 3, idx = 0
+distance_sum = 0
+entry(x, y) = (4, 4), exit(x, y) = (4, 0)
+distance_sum = 4
+entry(x, y) = (4, 4), exit(x, y) = (4, 0)
+entry(x, y) = (8, 4), exit(x, y) = (8, 0)
+distance_sum = 8
+entry(x, y) = (4, 4), exit(x, y) = (8, 4)
+distance_sum = 4
+entry(x, y) = (4, 4), exit(x, y) = (8, 4)
+entry(x, y) = (4, 0), exit(x, y) = (8, 0)
+distance_sum = 8
+entry(x, y) = (4, 4), exit(x, y) = (8, 0)
+distance_sum = 5.65685
+entry(x, y) = (4, 0), exit(x, y) = (8, 4)
+distance_sum = 5.65685
+entry(x, y) = (4, 0), exit(x, y) = (8, 0)
+distance_sum = 4
+entry(x, y) = (8, 4), exit(x, y) = (8, 0)
+distance_sum = 4
+Square::get_dp_table()
+id 11
+node_list == 0
+This is a portal: dir = 0, idx = 0
+This is a portal: dir = 1, idx = 0
+This is a portal: dir = 0, idx = 0
+This is a portal: dir = 2, idx = 0
+This is a portal: dir = 0, idx = 0
+This is a portal: dir = 3, idx = 0
+This is a portal: dir = 1, idx = 0
+This is a portal: dir = 2, idx = 0
+This is a portal: dir = 1, idx = 0
+This is a portal: dir = 3, idx = 0
+This is a portal: dir = 2, idx = 0
+This is a portal: dir = 3, idx = 0
+distance_sum = 0
+entry(x, y) = (8, 16), exit(x, y) = (8, 8)
+distance_sum = 8
+entry(x, y) = (8, 16), exit(x, y) = (8, 8)
+entry(x, y) = (16, 16), exit(x, y) = (16, 8)
+distance_sum = 16
+entry(x, y) = (8, 16), exit(x, y) = (16, 16)
+distance_sum = 8
+entry(x, y) = (8, 16), exit(x, y) = (16, 16)
+entry(x, y) = (8, 8), exit(x, y) = (16, 8)
+distance_sum = 16
+entry(x, y) = (8, 16), exit(x, y) = (16, 8)
+distance_sum = 11.3137
+entry(x, y) = (8, 8), exit(x, y) = (16, 16)
+distance_sum = 11.3137
+entry(x, y) = (8, 8), exit(x, y) = (16, 8)
+distance_sum = 8
+entry(x, y) = (16, 16), exit(x, y) = (16, 8)
+distance_sum = 8
+Square::get_dp_table()
+id 12
+node_list == 0
+This is a portal: dir = 0, idx = 0
+This is a portal: dir = 1, idx = 0
+This is a portal: dir = 0, idx = 0
+This is a portal: dir = 2, idx = 0
+This is a portal: dir = 0, idx = 0
+This is a portal: dir = 3, idx = 0
+This is a portal: dir = 1, idx = 0
+This is a portal: dir = 2, idx = 0
+This is a portal: dir = 1, idx = 0
+This is a portal: dir = 3, idx = 0
+This is a portal: dir = 2, idx = 0
+This is a portal: dir = 3, idx = 0
+distance_sum = 0
+entry(x, y) = (8, 8), exit(x, y) = (8, 0)
+distance_sum = 8
+entry(x, y) = (8, 8), exit(x, y) = (8, 0)
+entry(x, y) = (16, 8), exit(x, y) = (16, 0)
+distance_sum = 16
+entry(x, y) = (8, 8), exit(x, y) = (16, 8)
+distance_sum = 8
+entry(x, y) = (8, 8), exit(x, y) = (16, 8)
+entry(x, y) = (8, 0), exit(x, y) = (16, 0)
+distance_sum = 16
+entry(x, y) = (8, 8), exit(x, y) = (16, 0)
+distance_sum = 11.3137
+entry(x, y) = (8, 0), exit(x, y) = (16, 8)
+distance_sum = 11.3137
+entry(x, y) = (8, 0), exit(x, y) = (16, 0)
+distance_sum = 8
+entry(x, y) = (16, 8), exit(x, y) = (16, 0)
+distance_sum = 8
+Square::get_dp_table()
+id 7
+node_list == 0
+This is a portal: dir = 0, idx = 0
+This is a portal: dir = 1, idx = 0
+This is a portal: dir = 0, idx = 0
+This is a portal: dir = 2, idx = 0
+This is a portal: dir = 0, idx = 0
+This is a portal: dir = 3, idx = 0
+This is a portal: dir = 1, idx = 0
+This is a portal: dir = 2, idx = 0
+This is a portal: dir = 1, idx = 0
+This is a portal: dir = 3, idx = 0
+This is a portal: dir = 2, idx = 0
+This is a portal: dir = 3, idx = 0
+distance_sum = 0
+entry(x, y) = (16, 32), exit(x, y) = (16, 16)
+distance_sum = 16
+entry(x, y) = (16, 32), exit(x, y) = (16, 16)
+entry(x, y) = (32, 32), exit(x, y) = (32, 16)
+distance_sum = 32
+entry(x, y) = (16, 32), exit(x, y) = (32, 32)
+distance_sum = 16
+entry(x, y) = (16, 32), exit(x, y) = (32, 32)
+entry(x, y) = (16, 16), exit(x, y) = (32, 16)
+distance_sum = 32
+entry(x, y) = (16, 32), exit(x, y) = (32, 16)
+distance_sum = 22.6274
+entry(x, y) = (16, 16), exit(x, y) = (32, 32)
+distance_sum = 22.6274
+entry(x, y) = (16, 16), exit(x, y) = (32, 16)
+distance_sum = 16
+entry(x, y) = (32, 32), exit(x, y) = (32, 16)
+distance_sum = 16
+Square::get_dp_table()
+id 8
+node_list == 0
+This is a portal: dir = 0, idx = 0
+This is a portal: dir = 1, idx = 0
+This is a portal: dir = 0, idx = 0
+This is a portal: dir = 2, idx = 0
+This is a portal: dir = 0, idx = 0
+This is a portal: dir = 3, idx = 0
+This is a portal: dir = 1, idx = 0
+This is a portal: dir = 2, idx = 0
+This is a portal: dir = 1, idx = 0
+This is a portal: dir = 3, idx = 0
+This is a portal: dir = 2, idx = 0
+This is a portal: dir = 3, idx = 0
+distance_sum = 0
+entry(x, y) = (16, 16), exit(x, y) = (16, 0)
+distance_sum = 16
+entry(x, y) = (16, 16), exit(x, y) = (16, 0)
+entry(x, y) = (32, 16), exit(x, y) = (32, 0)
+distance_sum = 32
+entry(x, y) = (16, 16), exit(x, y) = (32, 16)
+distance_sum = 16
+entry(x, y) = (16, 16), exit(x, y) = (32, 16)
+entry(x, y) = (16, 0), exit(x, y) = (32, 0)
+distance_sum = 32
+entry(x, y) = (16, 16), exit(x, y) = (32, 0)
+distance_sum = 22.6274
+entry(x, y) = (16, 0), exit(x, y) = (32, 16)
+distance_sum = 22.6274
+entry(x, y) = (16, 0), exit(x, y) = (32, 0)
+distance_sum = 16
+entry(x, y) = (32, 16), exit(x, y) = (32, 0)
+distance_sum = 16
+Square::get_dp_table()
+id 3
+Square::get_dp_table()
+id 4

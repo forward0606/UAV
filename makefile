@@ -18,6 +18,7 @@ test_MyAlgo.out: input.o AlgorithmBase.o MyAlgo.o Algorithm/MyAlgo/testMyAlgo.cp
 	$(compile_parameter) Algorithm/MyAlgo/testMyAlgo.cpp input.o AlgorithmBase.o MyAlgo.o -o test_MyAlgo.out 
 	
 run: test_MyAlgo.out
+	./test_MyAlgo.out
 	./test_MyAlgo.out > test
 	python3 plot.py
 clean: 

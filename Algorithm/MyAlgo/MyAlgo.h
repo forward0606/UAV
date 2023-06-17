@@ -11,6 +11,7 @@
 struct Portal_id{
     int dir, idx;// dir 邊上的第 idx 個 portal
     Portal_id(int _dir, int _idx);
+    void display();
 };
 
 
@@ -74,7 +75,7 @@ class MyAlgo:public AlgorithmBase{
     Square *root;
     vector<Square*> squares;
     Input scaled_input;
-    
+    double L, L_plum, ratio;
     double farthest_pair();
 public:
     MyAlgo(const Input &_input);

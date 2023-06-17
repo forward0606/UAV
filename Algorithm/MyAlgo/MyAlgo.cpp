@@ -6,8 +6,8 @@ MyAlgo::MyAlgo(const Input &_input):AlgorithmBase("MyAlgo", _input){}
 
 double MyAlgo::farthest_pair(){
     double d = 0;
-    for(auto i: input.get_nodes()){
-        for(auto j: input.get_nodes()){
+    for(auto i : input.get_nodes()){
+        for(auto j : input.get_nodes()){
             d = max(d, distance(i, j));
         }
     }
@@ -30,14 +30,14 @@ void MyAlgo::Rescale(){
         down_right.y = min(down_right.y, i.y);
     }
     // L = max(x axis distance, y axis distance)
-    double L = max(down_right.x - up_left.x, up_left.y - down_right.y);
+    L = max(down_right.x - up_left.x, up_left.y - down_right.y);
     // node num
     int n = input.get_nodes().size();
     scaled_input.set_num_of_node(n);
     // set cost B
     scaled_input.set_B(input.get_B());
     // scale L * ratio =  ceil(8n/eplsion) 
-    double ratio = ceil(8 * n / par.epsilon) / L;
+    ratio = ceil(8 * n / par.epsilon) / L;
     // each square size
     double block = 4; 
     // scale coordinate with ratio and shift the min x to y axis, min y to x axis
@@ -45,7 +45,7 @@ void MyAlgo::Rescale(){
     vector<Coord> v;
     for(auto i : input.get_nodes()){
         // 超越？！
-        v.emplace_back(round((i.x-up_left.x) * ratio / block) * block, round((i.y-down_right.y) * ratio / block) * block);
+        v.emplace_back(round((i.x - up_left.x) * ratio / block) * block, round((i.y - down_right.y) * ratio / block) * block);
     }
     scaled_input.set_nodes(v);
 }
@@ -56,35 +56,28 @@ void MyAlgo::tree_travse(){
 void MyAlgo::tree_travse(Square *node){
     if(node == nullptr)return;
     node->display();
-    for(int i=0;i<4;i++){
+    for(int i = 0;i < 4;i++){
         tree_travse(node->get_child(i));
     }
 }
 void MyAlgo::display(){
-    cout<<"this is MyAlgo!"<<endl;
+    cout << "this is MyAlgo!" << endl;
     
-    cout<<"the origin input"<<endl;
+    cout << "the origin input" << endl;
     input.display();
     
-    cout<<"the scaled input:"<<endl;
+    cout << "the scaled input:" << endl;
     scaled_input.display();
 
     for(auto i:squares){
-        cout<<(i->get_id())<<" ";
+        cout << (i->get_id()) << " ";
     }
-    cout<<endl;
+    cout << endl;
 }
 
 void MyAlgo::make_tree(){
-    Coord up_left = scaled_input.get_nodes()[0], down_right=scaled_input.get_nodes()[0];
-    for(auto i:scaled_input.get_nodes()){
-        up_left.x = min(up_left.x, i.x);
-        down_right.x = max(down_right.x, i.x);
-        up_left.y = max(up_left.y, i.y);
-        down_right.y = min(down_right.y, i.y);
-    }
-    double L = max(down_right.x - up_left.x, up_left.y - down_right.y);
-    double L_plum  = 1;
+    L = L * ratio;
+    L_plum = 1;
     while(L_plum < L){
         L_plum *= 2;
     }
@@ -106,6 +99,10 @@ map<map<int, int>, double>  MyAlgo::get_dp_table(){
 Portal_id::Portal_id(int _dir, int _idx)
     :dir(_dir), idx(_idx){}
 
+void Portal_id::display(){
+    cout << "This is a portal: dir = " << dir << ", idx = " << idx << endl;
+}
+
 int Square::get_id(){
     return id;
 }
@@ -116,15 +113,16 @@ Square *Square::get_child(int idx){
 }
 
 void Square::find_portal_pairs(){
+    cout << "find portal pairs" << endl;
     portal_pairs.clear();
     vector<Portal_id> v;
-    for(int dir=0;dir<4;dir++){
-        for(int i=0;i<=par.m;i++){
+    for(int dir = 0;dir < 4;dir++){
+        for(int i = 0;i <= par.m;i++){
             v.emplace_back(dir, i);
         }
     }
-    for(int idx1 = 0;idx1<(int)v.size();idx1++){
-        for(int idx2 = idx1+1;idx2<(int)v.size();idx2++){
+    for(int idx1 = 0;idx1 < (int)v.size();idx1++){
+        for(int idx2 = idx1 + 1;idx2 < (int)v.size();idx2++){
             portal_pairs.emplace_back(v[idx1], v[idx2]);
         }
     }
@@ -149,7 +147,9 @@ int Square::Line_Segment_Test::point_location_test(Coord p1, Coord p2, Coord p3)
 bool Square::Line_Segment_Test::on_segment(Coord a, Coord b, Coord c){
     // c is on the segment or not
     // a, b, c are located on  the same line
-    if(a.x > b.x)   swap(a, b);
+    if(a.x > b.x){
+        swap(a, b);
+    }
     if(a.x <= c.x && c.x <= b.x && min(a.y, b.y) <= c.y && c.y <= max(a.y, b.y)){
         return true;
     }
@@ -170,10 +170,13 @@ bool Square::Line_Segment_Test::line_segment_intersection(Coord a, Coord b, Coor
 }
 
 bool Square::is_crossing(vector<int> P){
+    if(P.size() <= 1){
+        return false;
+    }
     pair<Portal_id, Portal_id> last = portal_pairs[P.back()];
     Coord a = get_Portal_Coord(last.first);
     Coord b = get_Portal_Coord(last.second);
-    for(int i=0;i<(int)P.size()-1;i++){
+    for(int i = 0;i < (int)P.size() - 1;i++){
         pair<Portal_id, Portal_id> path = portal_pairs[P[i]];
         Coord c = get_Portal_Coord(path.first);
         Coord d = get_Portal_Coord(path.second);
@@ -186,13 +189,15 @@ bool Square::is_crossing(vector<int> P){
 
 bool Square::over_r_limit(vector<int> P){
     int dir_cnt[4] = {0};
-    for(int i=0;i<(int)P.size();i++){
+    for(int i = 0;i < (int)P.size();i++){
         pair<Portal_id, Portal_id> path = portal_pairs[P[i]];
-        dir_cnt[path.first.dir] ++;
-        dir_cnt[path.second.dir] ++;
+        dir_cnt[path.first.dir]++;
+        dir_cnt[path.second.dir]++;
     }
-    for(int dir=0;dir<4;dir++){
-        if(dir_cnt[dir] > par.r)  return true;
+    for(int dir = 0;dir < 4;dir++){
+        if(dir_cnt[dir] > par.r){
+            return true;
+        }
     }
     return false;
 }
@@ -211,7 +216,7 @@ void Square::find_P_sets(int path_num, int start, vector<int> &P){
     }
     // store the state
     map<int, int> mp;
-    for(int i=0;i<(int)P.size();i++){
+    for(int i = 0;i < (int)P.size();i++){
         mp[P[i]]++;
     }
     P_sets.emplace_back(mp);
@@ -219,9 +224,10 @@ void Square::find_P_sets(int path_num, int start, vector<int> &P){
     if(path_num == 2 * par.r){
         return;
     }
-    for(int idx = start;idx<(int)portal_pairs.size();idx++){
-        P[path_num] = idx;
-        find_P_sets(path_num+1, idx, P);
+    for(int idx = start;idx < (int)portal_pairs.size();idx++){
+        P.emplace_back(idx);
+        find_P_sets(path_num + 1, idx, P);
+        P.pop_back();
     }
 }
 
@@ -235,96 +241,106 @@ void Square::find_P_sets(){
         把所有組合的 map 塞進一個 vector<map<int, int>> 中，此 vector 為 dp state 中 P 的所有可能
 	    把 vector<Portal_id, Portal_id>,  vector<map<int, int>> 存成 global 讓所有 dp state 都可以存取
     */
-    if(P_sets_isable)return;
+    if(P_sets_isable){
+        return;
+    }
     find_portal_pairs();
-    vector<int> P(2 * par.r);
+    vector<int> P;
     find_P_sets(0, 0, P);
     P_sets_isable = true;
 }
 
 void Square::display(){
-    cout<<"this is a square!"<<endl;
-    cout<<"id: "<<id<<endl;
-    cout<<"node list size "<<node_list.size()<<endl;
-    cout<<"node list:"<<endl;
-    for(auto i:node_list){
-        cout<<i.x<<" "<<i.y<<endl;
+    cout << "this is a square!" << endl;
+    cout << "id: " << id << endl;
+    cout << "node list size " << node_list.size() << endl;
+    cout << "node list:" << endl;
+    for(auto i : node_list){
+        cout << i.x << " " << i.y << endl;
     }
-    cout<<"portal:"<<endl;
-    for(int j=0;j<4;j++){
+    cout << "portal:" << endl;
+    for(int j = 0;j < 4;j++){
         if(Idx_L == j){
-            cout<<"L:"<<endl;
+            cout << "L:" << endl;
         }else if(Idx_D == j){
-            cout<<"D:"<<endl;
+            cout << "D:" << endl;
         }else if(Idx_U == j){
-            cout<<"U:"<<endl;
+            cout << "U:" << endl;
         }else{
-            cout<<"R:"<<endl;
+            cout << "R:" << endl;
         }
-        for(auto i:portal[j]){
-            cout<<i.x<<" "<<i.y<<endl;
+        for(auto i : portal[j]){
+            cout << i.x << " " << i.y << endl;
         }
-        cout<<endl;
+        cout << endl;
     }
-    cout<<"corner:"<<endl;
-    for(int j=0;j<4;j++){
+    cout << "corner:" << endl;
+    for(int j = 0;j < 4;j++){
         if(Idx_LD == j){
-            cout<<"LD: ";
+            cout << "LD: ";
         }else if(Idx_RD == j){
-            cout<<"RD: ";
+            cout << "RD: ";
         }else if(Idx_LU == j){
-            cout<<"LU: ";
+            cout << "LU: ";
         }else{
-            cout<<"RU: ";
+            cout << "RU: ";
         }
-        cout<<corner[j].x<<" "<<corner[j].y<<endl;
+        cout << corner[j].x << " " << corner[j].y << endl;
     }
-    cout<<"child id"<<endl;
-    for(int j=0;j<4;j++){
+    cout << "child id" << endl;
+    for(int j = 0;j < 4;j++){
         if(Idx_LD == j){
-            cout<<"LD: ";
+            cout << "LD: ";
         }else if(Idx_RD == j){
-            cout<<"RD: ";
+            cout << "RD: ";
         }else if(Idx_LU == j){
-            cout<<"LU: ";
+            cout << "LU: ";
         }else{
-            cout<<"RU: ";
+            cout << "RU: ";
         }
-        cout<<(children[j]==nullptr?-1:children[j]->id)<<endl;
+        cout << (children[j] == nullptr ? -1 : children[j]->id) << endl;
     }
-    cout<<"parent id: "<<(parent==nullptr?-1:parent->id)<<endl;
+    cout << "parent id: " << (parent == nullptr ? -1 : parent->id) << endl;
 }
 
 map<map<int, int>, double> Square::get_dp_table(){
-    cout<<"Square::get_dp_table()"<<endl;
-    cout<<"id "<<id<<endl;
+    cout << "Square::get_dp_table()" << endl;
+    cout << "id " << id << endl;
     if(dp_table_isable){
         return dp_table;
     }
     dp_table.clear();
     if(node_list.size() == 0){
-        cout<<"node_list == 0"<<endl;
-        for(auto p:P_sets){
+        cout << "node_list == 0" << endl;
+        find_P_sets();
+        for(int i = 0;i < (int)portal_pairs.size();i++){
+            portal_pairs[i].first.display();
+            portal_pairs[i].second.display();
+        }
+        for(auto p : P_sets){
             double distance_sum = 0;
-            for(auto it:p){
+            for(auto it : p){
                 pair<Portal_id, Portal_id> last = portal_pairs[it.first];
                 Coord a = get_Portal_Coord(last.first);
                 Coord b = get_Portal_Coord(last.second);
-                cout<<"entry(x, y) = ("<<a.x<<", "<<a.y<<"), exit(x, y) = ("<<b.x<<", "<<b.y<<")\n";
+                for(int iter = 0; iter < it.second; iter++){
+                    cout << "entry(x, y) = (" << a.x << ", " << a.y << "), exit(x, y) = (" << b.x << ", " << b.y << ")" << endl;
+                }
                 distance_sum += AlgorithmBase::distance(a, b) * it.second;
             }
-            cout<<"distance_sum = "<<distance_sum<<'\n';
+            cout << "distance_sum = " << distance_sum << endl;
             dp_table[p] = distance_sum;
         }
         dp_table_isable = true;
         return dp_table;
     }
     //if(node_list)
-    for(int i=0;i<4;i++){
+    for(int i = 0;i < 4;i++){
         if(children[i] != nullptr){
             children[i]->get_dp_table();
         }
     }
+    return dp_table;
 }
 
 
@@ -335,7 +351,7 @@ void Square::make_tree_dfs(){
     vector<Coord> v[4];
     Coord mid((corner[Idx_LU].x+corner[Idx_RU].x)/2, (corner[Idx_LU].y+corner[Idx_LD].y)/2);
 
-    for(auto i:node_list){
+    for(auto i : node_list){
         if(i.x <= mid.x && i.y >= mid.y){
             v[Idx_LU].emplace_back(i);
         }
@@ -351,7 +367,7 @@ void Square::make_tree_dfs(){
     children[Idx_LD] = new Square(make_pair(corner[Idx_LD].x, mid.y), make_pair(mid.x, corner[Idx_LD].y), v[Idx_LD], this);
     children[Idx_RU] = new Square(make_pair(mid.x, corner[Idx_RU].y), make_pair(corner[Idx_RU].x, mid.y), v[Idx_RU], this);
     children[Idx_RD] = new Square(mid, corner[Idx_RD], v[Idx_RD], this);
-    for(int i=0;i<4;i++){
+    for(int i = 0;i < 4;i++){
         children[i]->make_tree_dfs();
     }
 }
@@ -359,7 +375,7 @@ void Square::make_tree_dfs(){
 
 Square::Square(Coord _upleft, Coord _downright, vector<Coord> _node_list, Square *_parent)
     :id(counter++), node_list(_node_list), parent(_parent), dp_table_isable(false){
-    for(int i=0;i<4;i++){
+    for(int i = 0;i < 4;i++){
         children[i] = nullptr;
     }
     corner[Idx_LU] = _upleft;
@@ -370,7 +386,7 @@ Square::Square(Coord _upleft, Coord _downright, vector<Coord> _node_list, Square
     double W = _downright.x - _upleft.x;
     double H = _upleft.y - _downright.y;
     double dx = W / (par.m + 1), dy = H / (par.m + 1);
-    for(int i=0;i<=par.m;i++){
+    for(int i = 0;i <= par.m;i++){
         portal[Idx_L].emplace_back(corner[Idx_LD].x, corner[Idx_LD].y + dy * i);
         portal[Idx_U].emplace_back(corner[Idx_LU].x + dx * i, corner[Idx_LU].y);
         portal[Idx_R].emplace_back(corner[Idx_RU].x, corner[Idx_RU].y - dy * i);
@@ -385,7 +401,7 @@ bool Square::is_leaf(){
 }
 
 Square::~Square(){
-    for(int i=0;i<4;i++){
+    for(int i = 0;i < 4;i++){
         if(children[i] != nullptr){
             delete children[i];
             children[i] = nullptr;
