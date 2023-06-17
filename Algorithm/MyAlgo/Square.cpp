@@ -27,7 +27,7 @@ void Square::find_portal_pairs(){
         }
     }
     for(int idx1 = 0;idx1 < (int)v.size();idx1++){
-        for(int idx2 = idx1 + 1;idx2 < (int)v.size();idx2++){
+        for(int idx2 = idx1;idx2 < (int)v.size();idx2++){
             portal_pairs.emplace_back(v[idx1], v[idx2]);
         }
     }
@@ -61,6 +61,17 @@ bool Square::Line_Segment_Test::on_segment(Coord a, Coord b, Coord c){
     return false;
 }
 bool Square::Line_Segment_Test::line_segment_intersection(Coord a, Coord b, Coord c, Coord d){
+    if(a == b && c == d){
+        return a == c;
+    }
+    if(a == b){
+        //(c, d) is a line, a is a point
+        return point_location_test(c, d, a) == ON_LINE && on_segment(c, d, a);
+    }
+    if(c == d){
+        return point_location_test(a, b, c) == ON_LINE && on_segment(a, b, c);
+    }
+    
     int o1 = point_location_test(a, b, c);
     int o2 = point_location_test(a, b, d);
     int o3 = point_location_test(c, d, a);
@@ -347,43 +358,6 @@ map<map<int, int>, double> Square::get_dp_table(){
                     for(auto p3:children_dp_table[3]){
                         if(allow_merge(p, p0.first, p1.first, p2.first, p3.first)){
                             double distance_sum = p0.second + p1.second + p2.second + p3.second;
-                            cout<<"poasdffff: "<<p0.second<<" "<<p1.second<<" "<<p2.second<<" "<<p3.second<<endl;
-                            for(auto it : p){
-                                pair<Portal_id, Portal_id> last = portal_pairs[it.first];
-                                Coord a = get_Portal_Coord(last.first);
-                                Coord b = get_Portal_Coord(last.second);
-                                cout << "entry(x, y) = (" << a.x << ", " << a.y << "), exit(x, y) = (" << b.x << ", " << b.y << ")" << endl;
-                            }
-                            if(distance_sum == 64){
-                                cout<<"=========p0=========="<<endl;
-                                for(auto it : p0.first){
-                                    pair<Portal_id, Portal_id> last = portal_pairs[it.first];
-                                    Coord a = children[0]->get_Portal_Coord(last.first);
-                                    Coord b = children[0]->get_Portal_Coord(last.second);
-                                    cout << "entry(x, y) = (" << a.x << ", " << a.y << "), exit(x, y) = (" << b.x << ", " << b.y << ")" << endl;
-                                }
-                                cout<<"=========p1=========="<<endl;
-                                for(auto it : p1.first){
-                                    pair<Portal_id, Portal_id> last = portal_pairs[it.first];
-                                    Coord a = children[1]->get_Portal_Coord(last.first);
-                                    Coord b = children[1]->get_Portal_Coord(last.second);
-                                    cout << "entry(x, y) = (" << a.x << ", " << a.y << "), exit(x, y) = (" << b.x << ", " << b.y << ")" << endl;
-                                }
-                                cout<<"=========p2=========="<<endl;
-                                for(auto it : p2.first){
-                                    pair<Portal_id, Portal_id> last = portal_pairs[it.first];
-                                    Coord a = children[2]->get_Portal_Coord(last.first);
-                                    Coord b = children[2]->get_Portal_Coord(last.second);
-                                    cout << "entry(x, y) = (" << a.x << ", " << a.y << "), exit(x, y) = (" << b.x << ", " << b.y << ")" << endl;
-                                }
-                                cout<<"=========p3=========="<<endl;
-                                for(auto it : p3.first){
-                                    pair<Portal_id, Portal_id> last = portal_pairs[it.first];
-                                    Coord a = children[3]->get_Portal_Coord(last.first);
-                                    Coord b = children[3]->get_Portal_Coord(last.second);
-                                    cout << "entry(x, y) = (" << a.x << ", " << a.y << "), exit(x, y) = (" << b.x << ", " << b.y << ")" << endl;
-                                }
-                            }
                             min_distance = min(distance_sum, min_distance);
                         }
                     }

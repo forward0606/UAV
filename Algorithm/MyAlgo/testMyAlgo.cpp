@@ -2,7 +2,7 @@
 using namespace std;
 
 int main(){
-    Input input(4);
+    Input input(5);
     MyAlgo algo(input);
     algo.Rescale();
     algo.display();
