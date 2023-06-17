@@ -3,12 +3,10 @@
 
 class Parameter{
 public:
-    const int m;
-    const int r;
-    const double epsilon;
-    const double k;
-    Parameter()
-        :m(0), r(2), epsilon(1.0), k(4){}
+    static const int m = 0;
+    static const int r = 2;
+    static constexpr double epsilon = 1.0;
+    static constexpr double k = 4;
 };
 
 #endif

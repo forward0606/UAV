@@ -17,8 +17,8 @@ Input::Input(int num, double _B):num_of_node(num), B(_B){
 Input::Input(const int &n){
     num_of_node = n;
     B = 20;
-    nodes.emplace_back(1, 1);
-    nodes.emplace_back(8, 8);
+    nodes.emplace_back(0, 0);
+    // nodes.emplace_back(8, 8);
     nodes.emplace_back(0, 64);
     nodes.emplace_back(64, 64);
     nodes.emplace_back(64, 0);
