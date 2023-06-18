@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <cassert>
 #include <omp.h>
+#include <queue>
 #define EPS 1e-9
 
 
