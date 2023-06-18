@@ -282,25 +282,12 @@ bool Square::allow_merge(const map<int, int> &big, const map<int, int> &s0,\
         vis_small[b] = -1;
     }
 
-    // if(adj.size() >= 8){
-    //     cout<<"+++++++adj++++++++begin"<<endl;
-    //     for(auto i:adj){
-    //         cout<<"("<<i.first.x<<", "<<i.first.y<<"): ";
-    //         for(auto j:i.second){
-    //             cout<<"("<<j.x<<", "<<j.y<<"), ";
-    //         }
-    //         cout<<endl;
-    //     }
-    //     cout<<"+++++++adj++++++++end"<<endl;
-    // }
-
     for(auto i:cnt_node_degree){
         if(i.second & 1){
             return false;
         }
     }
-    
-    
+        
     //檢查所有小 portal 都有連到至少一個 portal 連到
     queue<Coord> q;
     for(auto iter:vis_big){
@@ -488,7 +475,6 @@ map<map<int, int>, double> Square::get_dp_table(){
             if(p0.first.size() == 0 && p0.second != 0){
                 continue;
             }
-            
             for(auto p1: children_dp_table[1]){
                 // #pragma omp parallel for
                 if(p1.first.size() == 0 && p1.second != 0){
@@ -502,8 +488,7 @@ map<map<int, int>, double> Square::get_dp_table(){
                     for(auto p3:children_dp_table[3]){
                         if(p3.first.size() == 0 && p3.second != 0){
                             continue;
-                        }
-                        
+                        }      
                         if(allow_merge(p, p0.first, p1.first, p2.first, p3.first)){
                             double distance_sum = p0.second + p1.second + p2.second + p3.second;
                             omp_set_lock(&writelock);
