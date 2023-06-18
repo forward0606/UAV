@@ -321,33 +321,6 @@ bool Square::allow_merge(const map<int, int> &big, const map<int, int> &s0,\
         }
     }
 
-    //檢查所有大 portal 都有連到至少一個小 portal 連到
-    for(auto iter:vis_small){
-        q.emplace(iter.first);
-    }
-    while(!q.empty()){
-        node = q.front();
-        q.pop();
-
-        if(vis_big.find(node) != vis_big.end()){
-            // 競程之尺
-            vis_big[node] = 1;
-        }
-        
-        for(auto iter:adj[node]){
-            // 競程之恥
-            auto tmp = vis_big.find(iter);
-            if( tmp != vis_big.end() && tmp->second == -1){
-                vis_big[iter] = 1;
-                q.emplace(iter);
-            }
-        }
-    }
-    for(auto iter:vis_big){
-        if(iter.second != 1){
-            return false;
-        }
-    }
     return true;
 }
 
