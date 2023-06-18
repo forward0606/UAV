@@ -511,57 +511,16 @@ map<map<int, int>, double> Square::get_dp_table(){
                                 min_distance = min(distance_sum, min_distance);
                             }
                             omp_unset_lock(&writelock);
-                            cout<<"==========allowable=========================="<<endl;
-                            cout<<"distance sum = "<<distance_sum<<endl;
-                            cout<<"^^^^p0^^^^"<<endl;
-                            cout<<"p0.distance = "<<p0.second<<endl;
-                            for(auto it : p0.first){
-                                pair<Portal_id, Portal_id> last = portal_pairs[it.first];
-                                Coord a = children[0] -> get_Portal_Coord(last.first);
-                                Coord b = children[0] -> get_Portal_Coord(last.second);
-                                cout << "entry(x, y) = (" << a.x << ", " << a.y << "), exit(x, y) = (" << b.x << ", " << b.y << ")" << endl;
-                            }
-                            cout<<"^^^^p1^^^^"<<endl;
-                            cout<<"p1.distance = "<<p1.second<<endl;
-                            for(auto it : p1.first){
-                                pair<Portal_id, Portal_id> last = portal_pairs[it.first];
-                                Coord a = children[1] ->get_Portal_Coord(last.first);
-                                Coord b = children[1] ->get_Portal_Coord(last.second);
-                                cout << "entry(x, y) = (" << a.x << ", " << a.y << "), exit(x, y) = (" << b.x << ", " << b.y << ")" << endl;
-                            }
-                            cout<<"^^^^p2^^^^"<<endl;
-                            cout<<"p2.distance = "<<p2.second<<endl;
-                            for(auto it : p2.first){
-                                pair<Portal_id, Portal_id> last = portal_pairs[it.first];
-                                Coord a = children[2] ->get_Portal_Coord(last.first);
-                                Coord b = children[2] ->get_Portal_Coord(last.second);
-                                cout << "entry(x, y) = (" << a.x << ", " << a.y << "), exit(x, y) = (" << b.x << ", " << b.y << ")" << endl;
-                            }
-                            cout<<"^^^^p3^^^^"<<endl;
-                            cout<<"p3.distance = "<<p3.second<<endl;
-                            for(auto it : p3.first){
-                                pair<Portal_id, Portal_id> last = portal_pairs[it.first];
-                                Coord a = children[3] ->get_Portal_Coord(last.first);
-                                Coord b = children[3] ->get_Portal_Coord(last.second);
-                                cout << "entry(x, y) = (" << a.x << ", " << a.y << "), exit(x, y) = (" << b.x << ", " << b.y << ")" << endl;
-                            }
                         }
                     }
                 }
             }
         }
-        cout<<"********bigger square*************strart"<<endl;
-        for(auto it : p){
-            pair<Portal_id, Portal_id> last = portal_pairs[it.first];
-            Coord a = get_Portal_Coord(last.first);
-            Coord b = get_Portal_Coord(last.second);
-            cout << "entry(x, y) = (" << a.x << ", " << a.y << "), exit(x, y) = (" << b.x << ", " << b.y << ")" << endl;
-        }
-        cout<<"min_distance = " << min_distance << endl;
+        
+        
         if(min_distance - 1e9 < EPS){
             dp_table[p] = min_distance;
         }
-        cout<<"********bigger square*************end"<<endl;
     }
     dp_table_isable = true;
 

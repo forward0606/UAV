@@ -1,12 +1,12 @@
-#include"MyAlgo.h"
+#include "MyAlgo.h"
 using namespace std;
 
 int main(){
     Input input(5);
     MyAlgo algo(input);
     algo.Rescale();
-    algo.display();
+    // algo.display();
     algo.make_tree();
     algo.tree_travse();
-    algo.get_dp_table();
+    cout << "tsp ans: " << algo.get_dp_table().begin()->second << endl;
 }
