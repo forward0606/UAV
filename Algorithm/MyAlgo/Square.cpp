@@ -494,12 +494,12 @@ void Square::make_tree_dfs(){
     Coord mid((corner[Idx_LU].x+corner[Idx_RU].x)/2, (corner[Idx_LU].y+corner[Idx_LD].y)/2);
 
     for(auto i : node_list){
-        if(i.x <= mid.x && i.y >= mid.y){
+        if(i.x - mid.x < EPS && i.y - mid.y > -EPS){
             v[Idx_LU].emplace_back(i);
         }
-        else if(i.x <= mid.x){
+        else if(i.x - mid.x < EPS){
             v[Idx_LD].emplace_back(i);
-        }else if(i.y >= mid.y){
+        }else if(i.y - mid.y > -EPS){
             v[Idx_RU].emplace_back(i);
         }else{
             v[Idx_RD].emplace_back(i);

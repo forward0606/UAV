@@ -15,7 +15,7 @@ protected:
     map<string, double> result;
 public:
     AlgorithmBase(const string &algo_name, const Input &_input);
-    ~AlgorithmBase(){};
+    // ~AlgorithmBase(){};
     string get_algo_name();
     static double distance(Coord p1, Coord p2);
     // void run();

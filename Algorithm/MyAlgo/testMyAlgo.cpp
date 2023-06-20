@@ -3,6 +3,7 @@ using namespace std;
 
 int main(){
     Input input(5);
+    input.display();
     MyAlgo algo(input);
     algo.Rescale();
     // algo.display();

@@ -21,6 +21,7 @@ void MyAlgo::Rescale(){
         把縮放後的每個點(x, y) -> (round(x/block)*block, round(y/block)*block)
     */
     // find L
+    cout<<"get_nodes().size() = "<<input.get_nodes().size()<<'\n';
     Coord up_left = input.get_nodes()[0], down_right = input.get_nodes()[0];
     for(auto i : input.get_nodes()){
         up_left.x = min(up_left.x, i.x);
@@ -32,7 +33,6 @@ void MyAlgo::Rescale(){
     L = max(down_right.x - up_left.x, up_left.y - down_right.y);
     // node num
     int n = input.get_nodes().size();
-    scaled_input.set_num_of_node(n);
     // set cost B
     scaled_input.set_B(input.get_B());
     // scale L * ratio =  ceil(8n/eplsion) 
@@ -41,10 +41,14 @@ void MyAlgo::Rescale(){
     double block = 4; 
     // scale coordinate with ratio and shift the min x to y axis, min y to x axis
     // rounding to block
+    set<Coord> s;
     vector<Coord> v;
     for(auto i : input.get_nodes()){
-        // 超越？！
-        v.emplace_back(round((i.x - up_left.x) * ratio / block) * block, round((i.y - down_right.y) * ratio / block) * block);
+        // 超越？！ --> 0
+        s.insert(Coord(round((i.x - up_left.x) * ratio / block) * block, round((i.y - down_right.y) * ratio / block) * block));
+    }
+    for(auto e:s){
+        v.emplace_back(e);
     }
     scaled_input.set_nodes(v);
 }
