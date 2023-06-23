@@ -65,7 +65,7 @@ double MyAlgo::run(){
     cerr<<"L = "<<L<<endl;
     #pragma omp parallel for
     for(int a = 0;a<(int)L;a++){
-        // #pragma omp parallel for
+        #pragma omp parallel for
         for(int b = 0;b<(int)L;b++){
             MyAlgo *p = new MyAlgo(input);
             p->rescale(a, b);
