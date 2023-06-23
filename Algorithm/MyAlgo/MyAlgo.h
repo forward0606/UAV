@@ -22,9 +22,10 @@ public:
     void tree_travse();
     void tree_travse(Square *node);
     void display();
-    void Rescale();
+    void rescale(double a, double b);
     void make_tree();
     map<map<int, int>, double>  get_dp_table();
+    double run();
 };
 
 #endif

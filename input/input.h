@@ -13,13 +13,13 @@ class Input{
     double B;
 public:
     Input(int num, double _B);
-    Input(const int &n);
+    Input();
     Input(const Input& r);
-    Input(){};
+    // Input(){};
     ~Input(){};
     void set_nodes(vector<Coord> v);
     void set_B(double b);
-    const int& get_num_of_node()const;
+    int get_num_of_node()const;
     const vector<Coord>& get_nodes()const;
     const double& get_B()const;
     void display()const;

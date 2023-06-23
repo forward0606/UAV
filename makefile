@@ -1,4 +1,4 @@
-compile_parameter = g++ -g -Wall -Wextra -std=gnu++1z
+compile_parameter = g++ -g -Wall -Wextra -std=gnu++1z -fopenmp
 
 all: MyAlgo.o
 

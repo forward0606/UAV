@@ -426,7 +426,7 @@ map<map<int, int>, double> Square::get_dp_table(){
 
     // recursive
     vector<map<map<int, int>, double>> children_dp_table(4);
-    #pragma omp parallel for
+    // #pragma omp parallel for
     for(int i = 0;i < 4;i++){
         if(children[i] != nullptr){
             children_dp_table[i] = children[i]->get_dp_table();
@@ -437,7 +437,7 @@ map<map<int, int>, double> Square::get_dp_table(){
     find_P_sets();
     // vector<map<int, int>> P_sets; value: 一組 path 集合
     // map<map<int, int>, double> dp_table key: 一組 path 集合, value: path 集合的總長度
-    #pragma omp parallel for
+    // #pragma omp parallel for
     for(auto p : P_sets){
         double min_distance = 1e9;
         omp_lock_t writelock;

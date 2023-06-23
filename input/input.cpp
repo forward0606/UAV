@@ -23,7 +23,7 @@ Input::Input(const Input& r){
 }
 
 
-Input::Input(const int &n){
+Input::Input(){
     B = 20;
     nodes.clear();
     nodes.emplace_back(0, 0);
@@ -39,7 +39,7 @@ Input::Input(const int &n){
     // nodes.emplace_back(64, 64);
 }
 
-const int& Input::get_num_of_node()const{
+int Input::get_num_of_node()const{
     return nodes.size();
 }
 const vector<Coord>& Input::get_nodes()const{

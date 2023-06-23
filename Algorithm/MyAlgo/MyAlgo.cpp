@@ -13,7 +13,7 @@ double MyAlgo::farthest_pair(){
     return d;
 }
 
-void MyAlgo::Rescale(){
+void MyAlgo::rescale(double a, double b){// with random shift parameter (a, b)
     /*
         先找 L --> max(mxx-mix, mxy-miy)
         縮放 ceiling(8n/epsilon) / L 倍 
@@ -45,12 +45,37 @@ void MyAlgo::Rescale(){
     vector<Coord> v;
     for(auto i : input.get_nodes()){
         // 超越？！ --> 0
-        s.insert(Coord(round((i.x - up_left.x) * ratio / block) * block, round((i.y - down_right.y) * ratio / block) * block));
+        s.insert(Coord(round((i.x - up_left.x + a) * ratio / block) * block, round((i.y - down_right.y + b) * ratio / block) * block));
     }
     for(auto e:s){
         v.emplace_back(e);
     }
     scaled_input.set_nodes(v);
+}
+
+double MyAlgo::run(){
+    double mi = 1e9;
+    for(int a = 0;a<1;a++){
+        omp_lock_t writelock;
+        omp_init_lock(&writelock);
+        #pragma omp parallel for
+        for(int b = 0;b<6;b++){
+            rescale(a, b);
+            make_tree();
+            tree_travse();
+            auto res = get_dp_table();
+            auto it = res.find(Square::P_sets[0]);
+            if( it != res.end()){
+                
+                omp_set_lock(&writelock);
+                mi  = min(mi, it->second);            
+                omp_unset_lock(&writelock);
+
+                cerr<<"("<<a<<", "<<b<<") = "<<it->second<<endl;
+            }
+        }
+    }
+    return mi;
 }
 
 void MyAlgo::tree_travse(){
