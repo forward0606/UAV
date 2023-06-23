@@ -1,7 +1,9 @@
 #include"MyAlgo.h"
 
 
-MyAlgo::MyAlgo(const Input &_input):AlgorithmBase("MyAlgo", _input){}
+MyAlgo::MyAlgo(const Input &_input):AlgorithmBase("MyAlgo", _input){
+    root = nullptr;
+}
 
 double MyAlgo::farthest_pair(){
     double d = 0;
@@ -51,15 +53,20 @@ void MyAlgo::rescale(double a, double b){// with random shift parameter (a, b)
         v.emplace_back(e);
     }
     scaled_input.set_nodes(v);
+    L = L * ratio;
 }
 
 double MyAlgo::run(){
     double mi = 1e9;
-    for(int a = 0;a<1;a++){
-        omp_lock_t writelock;
-        omp_init_lock(&writelock);
-        #pragma omp parallel for
-        for(int b = 0;b<6;b++){
+    omp_lock_t writelock;
+    omp_init_lock(&writelock);
+    // #pragma omp parallel for schedule(dynamic,1)
+    rescale(0, 0);
+    cerr<<"L = "<<L<<endl;
+    #pragma omp parallel for
+    for(int a = 0;a<(int)L;a++){
+        // #pragma omp parallel for
+        for(int b = 0;b<(int)L;b++){
             MyAlgo *p = new MyAlgo(input);
             p->rescale(a, b);
             p->make_tree();
@@ -99,27 +106,27 @@ void MyAlgo::display(){
     cout << "the scaled input:" << endl;
     scaled_input.display();
 
-    for(auto i:squares){
-        cout << (i->get_id()) << " ";
-    }
-    cout << endl;
+}
+
+int MyAlgo::get_counter(Square* p){
+    squares.emplace_back(p);
+    return squares.size()-1;
 }
 
 void MyAlgo::make_tree(){
-    L = L * ratio;
     L_plum = 1;
     while(L_plum < L){
         L_plum *= 2;
     }
-    Square::counter = 0;
-    Square::squares.clear();
-    root = new Square(Coord(0, L_plum), Coord(L_plum, 0), scaled_input.get_nodes(), nullptr);
-    root->make_tree_dfs();
-    squares = Square::squares;
+    squares.clear();
+    root = new Square(Coord(0, L_plum), Coord(L_plum, 0), scaled_input.get_nodes(), nullptr, this);
+    root -> set_id(get_counter(root));
+    root -> make_tree_dfs();
 }
 
 MyAlgo::~MyAlgo(){
     if(root != nullptr) delete root;
+    root = nullptr;
 }
 
 map<map<int, int>, double>  MyAlgo::get_dp_table(){

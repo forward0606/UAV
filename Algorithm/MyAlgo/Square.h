@@ -3,6 +3,8 @@
 
 
 #include "../AlgorithmBase/AlgorithmBase.h"
+class MyAlgo;
+#include "MyAlgo.h"
 #include "Parameter.h"
 #include <set>
 #include <algorithm>
@@ -36,9 +38,10 @@ class Square{
         static bool on_segment(Coord a, Coord b, Coord c);
         static bool line_segment_intersection(Coord a, Coord b, Coord c, Coord d);
     };
+    MyAlgo *algoptr;    // this square is used by algoptr
 public:
-    inline static int counter;
-    inline static vector<Square*> squares;
+    // inline static int counter;
+    // inline static vector<Square*> squares;
 
     /*
         portal 配對用 vector<Portal_id, Portal_id> 存 --> 雙迴圈 for loop
@@ -63,11 +66,12 @@ public:
     void find_portal_pairs();
     void find_P_sets(int path_num, int portal_pair_id, vector<int> &P);
     void find_P_sets();
+    void set_id(int _id);
     map<map<int, int>, double> get_dp_table();
     Square* get_child(int idx);
     int get_id();
     Coord get_Portal_Coord(const Portal_id &p_id)const;
-    Square(Coord _upleft, Coord _downright, vector<Coord> _node_list, Square *_parent);
+    Square(Coord _upleft, Coord _downright, vector<Coord> _node_list, Square *_parent, MyAlgo * ptr);
     ~Square();
     bool is_leaf();
     bool is_crossing(vector<int> P);

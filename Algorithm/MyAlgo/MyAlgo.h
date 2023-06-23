@@ -3,6 +3,7 @@
 
 
 #include "../AlgorithmBase/AlgorithmBase.h"
+class Square;
 #include "Square.h"
 #include "Parameter.h"
 #include <set>
@@ -24,6 +25,7 @@ public:
     void display();
     void rescale(double a, double b);
     void make_tree();
+    int get_counter(Square* p);
     map<map<int, int>, double>  get_dp_table();
     double run();
 };

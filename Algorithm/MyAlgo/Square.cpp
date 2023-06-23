@@ -505,18 +505,26 @@ void Square::make_tree_dfs(){
             v[Idx_RD].emplace_back(i);
         }
     }
-    children[Idx_LU] = new Square(corner[Idx_LU], mid, v[Idx_LU], this);
-    children[Idx_LD] = new Square(make_pair(corner[Idx_LD].x, mid.y), make_pair(mid.x, corner[Idx_LD].y), v[Idx_LD], this);
-    children[Idx_RU] = new Square(make_pair(mid.x, corner[Idx_RU].y), make_pair(corner[Idx_RU].x, mid.y), v[Idx_RU], this);
-    children[Idx_RD] = new Square(mid, corner[Idx_RD], v[Idx_RD], this);
+    children[Idx_LU] = new Square(corner[Idx_LU], mid, v[Idx_LU], this, algoptr);
+    children[Idx_LU] -> id = algoptr -> get_counter(children[Idx_LU]);
+    
+    children[Idx_LD] = new Square(make_pair(corner[Idx_LD].x, mid.y), make_pair(mid.x, corner[Idx_LD].y), v[Idx_LD], this, algoptr);
+    children[Idx_LD] -> id = algoptr -> get_counter(children[Idx_LD]);
+    
+    children[Idx_RU] = new Square(make_pair(mid.x, corner[Idx_RU].y), make_pair(corner[Idx_RU].x, mid.y), v[Idx_RU], this, algoptr);
+    children[Idx_RU] -> id = algoptr -> get_counter(children[Idx_RU]);
+    
+    children[Idx_RD] = new Square(mid, corner[Idx_RD], v[Idx_RD], this, algoptr);
+    children[Idx_RD] -> id = algoptr -> get_counter(children[Idx_RD]);
+
     for(int i = 0;i < 4;i++){
-        children[i]->make_tree_dfs();
+        children[i] -> make_tree_dfs();
     }
 }
 
 
-Square::Square(Coord _upleft, Coord _downright, vector<Coord> _node_list, Square *_parent)
-    :id(counter++), node_list(_node_list), parent(_parent), dp_table_isable(false){
+Square::Square(Coord _upleft, Coord _downright, vector<Coord> _node_list, Square *_parent, MyAlgo * ptr)
+    :node_list(_node_list), parent(_parent), dp_table_isable(false), algoptr(ptr){
     for(int i = 0;i < 4;i++){
         children[i] = nullptr;
     }
@@ -534,12 +542,16 @@ Square::Square(Coord _upleft, Coord _downright, vector<Coord> _node_list, Square
         portal[Idx_R].emplace_back(corner[Idx_RU].x, corner[Idx_RU].y - dy * i);
         portal[Idx_D].emplace_back(corner[Idx_RD].x - dx * i, corner[Idx_RD].y);
     }
-    squares.emplace_back(this);
+    // squares.emplace_back(this);
 }
 
 
 bool Square::is_leaf(){
     return node_list.size() <= 1;
+}
+
+void Square::set_id(int _id){
+    id = _id;
 }
 
 Square::~Square(){
