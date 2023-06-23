@@ -60,10 +60,11 @@ double MyAlgo::run(){
         omp_init_lock(&writelock);
         #pragma omp parallel for
         for(int b = 0;b<6;b++){
-            rescale(a, b);
-            make_tree();
-            tree_travse();
-            auto res = get_dp_table();
+            MyAlgo *p = new MyAlgo(input);
+            p->rescale(a, b);
+            p->make_tree();
+            p->tree_travse();
+            auto res = p->get_dp_table();
             auto it = res.find(Square::P_sets[0]);
             if( it != res.end()){
                 
@@ -73,6 +74,7 @@ double MyAlgo::run(){
 
                 cerr<<"("<<a<<", "<<b<<") = "<<it->second<<endl;
             }
+            delete p;
         }
     }
     return mi;
