@@ -12,12 +12,18 @@ class MyAlgo;
 #include <omp.h>
 #include <queue>
 #define EPS 1e-9
-
+using namespace std;
 
 struct Portal_id{
     int dir, idx;// dir 邊上的第 idx 個 portal
     Portal_id(int _dir, int _idx);
     void display();
+};
+
+struct DP_PT{
+    map<int, int> p;        // path selection
+    int T_id;               // rounding length limit
+    DP_PT(map<int, int> _p, int _T_id);
 };
 
 
@@ -28,7 +34,10 @@ class Square{
     Coord corner[4];
     Square *children[4];
     Square *parent;
-    map<map<int, int>, double> dp_table;   // key: 一種路徑選擇，value 為此路徑選擇的最小長度 
+    
+    vector<double> T;
+    map<int, bool> dp_table;    //key: vector size is k, val is id of DP_PT in all_dp_pts
+                                        //val: can we use this parameter to go through all internal node 
     bool dp_table_isable;
     struct Line_Segment_Test{
         static const int ON_LINE = 0;
@@ -51,6 +60,9 @@ public:
     inline static vector<pair<Portal_id, Portal_id>> portal_pairs;
     inline static vector<map<int, int>> P_sets;
     inline static bool P_sets_isable = false;
+    inline static vector<vector<DP_PT>> all_dp_pts;
+    inline static bool all_dp_pts_isable = false;
+    inline static int z = 0;
 
     static const int Idx_U = 0;
     static const int Idx_L = 1;
@@ -66,8 +78,10 @@ public:
     void find_portal_pairs();
     void find_P_sets(int path_num, int portal_pair_id, vector<int> &P);
     void find_P_sets();
+    void find_all_dp_pts(vector<DP_PT> &states);
+    void find_all_dp_pts();
     void set_id(int _id);
-    map<map<int, int>, double> get_dp_table();
+    map<int, bool> get_dp_table();
     Square* get_child(int idx);
     int get_id();
     Coord get_Portal_Coord(const Portal_id &p_id)const;

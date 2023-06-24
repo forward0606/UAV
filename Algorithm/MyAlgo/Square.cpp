@@ -9,6 +9,9 @@ void Portal_id::display(){
     cout << "This is a portal: dir = " << dir << ", idx = " << idx << endl;
 }
 
+DP_PT::DP_PT(map<int, int> _p, int _T_id)
+    :p(_p), T_id(_T_id){}
+
 int Square::get_id(){
     return id;
 }
@@ -165,6 +168,31 @@ void Square::find_P_sets(){
     find_P_sets(0, 0, P);
     P_sets_isable = true;
 }
+
+void Square::find_all_dp_pts(vector<DP_PT> &states){
+    
+    if(states.size() == Parameter::k){
+        all_dp_pts.emplace_back(states);
+        return;
+    }
+    for(auto p : P_sets){
+        for(int t_id=0;t_id<z;t_id++){
+            states.emplace_back(p, t_id);
+            find_all_dp_pts(states);
+            states.pop_back();
+        }
+    }
+}
+void Square::find_all_dp_pts(){
+    find_P_sets();
+    if(all_dp_pts_isable){
+        return;
+    }
+    vector<DP_PT> states;
+    find_all_dp_pts(states);
+    all_dp_pts_isable = true;
+}
+
 
 void Square::display(){
     cout << "this is a square!" << endl;
@@ -325,7 +353,7 @@ bool Square::allow_merge(const map<int, int> &big, const map<int, int> &s0,\
 }
 
 
-map<map<int, int>, double> Square::get_dp_table(){
+map<int, bool> Square::get_dp_table(){
     cout << "Square::get_dp_table()" << endl;
     cout << "id " << id << endl;
     if(dp_table_isable){
@@ -334,30 +362,36 @@ map<map<int, int>, double> Square::get_dp_table(){
     dp_table.clear();
     if(node_list.size() == 0){
         cout << "node_list == 0" << endl;
-        find_P_sets();
-        // for(int i = 0;i < (int)portal_pairs.size();i++){
-        //     portal_pairs[i].first.display();
-        //     portal_pairs[i].second.display();
-        // }
-        for(auto p : P_sets){
-            double distance_sum = 0;
-            bool flag = true;                   //eliminate self cycle
-            for(auto it : p){
-                pair<Portal_id, Portal_id> last = portal_pairs[it.first];
-                Coord a = get_Portal_Coord(last.first);
-                Coord b = get_Portal_Coord(last.second);
-                if(a == b){
-                    flag = false;
+        find_all_dp_pts();
+        
+        for(int state_id = 0;state_id < all_dp_pts.size();state_id++){
+            vector<DP_PT> states = all_dp_pts[state_id];
+            bool is_good_state = true;
+            for(DP_PT st:states){
+                double distance_sum = 0;
+                bool flag = true;                   //eliminate self cycle
+                for(auto it:st.p){
+                    pair<Portal_id, Portal_id> last = portal_pairs[it.first];
+                    Coord a = get_Portal_Coord(last.first);
+                    Coord b = get_Portal_Coord(last.second);
+                    if(a == b){
+                        flag = false;
+                        break;
+                    }
+                    for(int iter = 0; iter < it.second; iter++){
+                        cout << "entry(x, y) = (" << a.x << ", " << a.y << "), exit(x, y) = (" << b.x << ", " << b.y << ")" << endl;
+                    }
+                    distance_sum += AlgorithmBase::distance(a, b) * it.second;
+                }
+                if(!flag || st.T_id >= (int)T.size() || distance_sum > T[st.T_id]){
+                    is_good_state = false;
                     break;
                 }
-                for(int iter = 0; iter < it.second; iter++){
-                    cout << "entry(x, y) = (" << a.x << ", " << a.y << "), exit(x, y) = (" << b.x << ", " << b.y << ")" << endl;
-                }
-                distance_sum += AlgorithmBase::distance(a, b) * it.second;
             }
-            if(flag){
-                cout << "distance_sum = " << distance_sum << endl;
-                dp_table[p] = distance_sum;
+            if(is_good_state){
+                dp_table[state_id] = true;
+            }else{
+                dp_table[state_id] = false;
             }
         }
         dp_table_isable = true;
@@ -366,77 +400,100 @@ map<map<int, int>, double> Square::get_dp_table(){
     if(node_list.size() == 1){
         cout << "node_list == 1" << endl;
         cout << "node(x, y) = (" << node_list[0].x << ", " << node_list[0].y << ")" << endl;
-        find_P_sets();
-        for(auto p : P_sets){
-            double distance_sum = 0;
-            if(p.begin() == p.end()){
-                continue;
-            }
-            int self_cycle = 0;
-            for(auto it : p){
-                pair<Portal_id, Portal_id> last = portal_pairs[it.first];
-                Coord a = get_Portal_Coord(last.first);
-                Coord b = get_Portal_Coord(last.second);
-                for(int iter = 0; iter < it.second; iter++){
-                    cout << "entry(x, y) = (" << a.x << ", " << a.y << "), exit(x, y) = (" << b.x << ", " << b.y << ")" << endl;
-                }
-                if(a == b){
-                    self_cycle += 1;
-                }
-                distance_sum += AlgorithmBase::distance(a, b) * it.second;
-            }
-            cout << "distance_sum = " << distance_sum << endl;
-            double mi = 1e9;
-            if(self_cycle > 1){
-                continue;
-            }
-            if(self_cycle == 1){
-                for(auto it:p){
+        find_all_dp_pts();
+
+        for(int state_id = 0;state_id < all_dp_pts.size();state_id++){
+            vector<DP_PT> states = all_dp_pts[state_id];
+            bool is_good_state = true;
+            bool cycle_pass = false;                // exist any cycle can go through the internal node
+            for(DP_PT st:states){
+                double distance_sum = 0;
+                bool flag = true;                   //eliminate self cycle
+                int self_cycle = 0;
+                for(auto it:st.p){
                     pair<Portal_id, Portal_id> last = portal_pairs[it.first];
                     Coord a = get_Portal_Coord(last.first);
                     Coord b = get_Portal_Coord(last.second);
-                    if(a == b && a == node_list[0]){
-                        break;
+                    for(int iter = 0; iter < it.second; iter++){
+                        cout << "entry(x, y) = (" << a.x << ", " << a.y << "), exit(x, y) = (" << b.x << ", " << b.y << ")" << endl;
                     }
                     if(a == b){
+                        self_cycle += 1;
+                    }
+                    distance_sum += AlgorithmBase::distance(a, b) * it.second;
+                }
+                double mi = 1e9;
+                if(!flag || st.T_id >= (int)T.size() || distance_sum > T[st.T_id]){
+                    is_good_state = false;
+                    break;
+                }
+                if(self_cycle > 1){
+                    is_good_state = false;
+                    break;
+                }
+                if(self_cycle == 1){
+                    for(auto it:st.p){
+                        pair<Portal_id, Portal_id> last = portal_pairs[it.first];
+                        Coord a = get_Portal_Coord(last.first);
+                        Coord b = get_Portal_Coord(last.second);
+                        if(a == b && a == node_list[0]){
+                            // 由於我們允許不選任何 portal 配對，故該點可以獨立形成一個 cycle
+                            // 這個如果不 break 可能導致一個 cycle 中有兩個獨立的 cycle
+                            break;
+                        }
+                        if(a == b){
+                            // 有自環則必定需經過 internal node，若沒有這個限制一樣會導致一個 cycle 中有兩個獨立的 cycle
+                            double pass_node = AlgorithmBase::distance(a, node_list[0]) + AlgorithmBase::distance(b, node_list[0]);
+                            mi = min(mi, distance_sum - AlgorithmBase::distance(a, b) + pass_node);
+                            cout << "minimum distance = " << mi << endl;
+                            if(st.T_id < T.size() && mi <= T[st.T_id]){
+                                cycle_pass = true;
+                            }
+                            break;
+                        }
+                    }
+                }else{
+                    //self_cycle == 0
+                    // 找任意 path 連到 internal node，並且檢查是否滿足長度限制
+                    for(auto it:st.p){
+                        pair<Portal_id, Portal_id> last = portal_pairs[it.first];
+                        Coord a = get_Portal_Coord(last.first);
+                        Coord b = get_Portal_Coord(last.second);
                         double pass_node = AlgorithmBase::distance(a, node_list[0]) + AlgorithmBase::distance(b, node_list[0]);
                         mi = min(mi, distance_sum - AlgorithmBase::distance(a, b) + pass_node);
-                        cout << "minimum distance = " << mi << endl;
-                        dp_table[p] = mi;
-                        break;
+                    }
+                    cout << "minimum distance = " << mi << endl;
+                    if(st.T_id < T.size() && mi <= T[st.T_id]){
+                        cycle_pass = true;
                     }
                 }
+
+            }
+            if(is_good_state && cycle_pass){
+                dp_table[state_id] = true;
             }else{
-                //self_cycle == 0
-                for(auto it:p){
-                    pair<Portal_id, Portal_id> last = portal_pairs[it.first];
-                    Coord a = get_Portal_Coord(last.first);
-                    Coord b = get_Portal_Coord(last.second);
-                    double pass_node = AlgorithmBase::distance(a, node_list[0]) + AlgorithmBase::distance(b, node_list[0]);
-                    mi = min(mi, distance_sum - AlgorithmBase::distance(a, b) + pass_node);
-                }
-                cout << "minimum distance = " << mi << endl;
-                dp_table[p] = mi;
+                dp_table[state_id] = false;
             }
         }
-
         dp_table_isable = true;
         return dp_table;
     }
 
     // recursive
-    vector<map<map<int, int>, double>> children_dp_table(4);
+    vector<map<int, bool>> children_dp_table(4);
     // #pragma omp parallel for
     for(int i = 0;i < 4;i++){
         if(children[i] != nullptr){
             children_dp_table[i] = children[i]->get_dp_table();
         }
     }
+    
+
+    /*
+    TOOOOOOOOOOOOO DOOOOOOOOOOOOOOOOOOO
     cout << "merge" << endl;
     // merge
-    find_P_sets();
-    // vector<map<int, int>> P_sets; value: 一組 path 集合
-    // map<map<int, int>, double> dp_table key: 一組 path 集合, value: path 集合的總長度
+    find_all_dp_pts();
     // #pragma omp parallel for
     for(auto p : P_sets){
         double min_distance = 1e9;
@@ -480,10 +537,12 @@ map<map<int, int>, double> Square::get_dp_table(){
             dp_table[p] = min_distance;
         }
     }
+    */
     dp_table_isable = true;
 
     return dp_table;
 }
+
 
 
 void Square::make_tree_dfs(){
@@ -543,6 +602,16 @@ Square::Square(Coord _upleft, Coord _downright, vector<Coord> _node_list, Square
         portal[Idx_D].emplace_back(corner[Idx_RD].x - dx * i, corner[Idx_RD].y);
     }
     // squares.emplace_back(this);
+    T.clear();
+    double L = algoptr -> get_L();
+    L *= L;
+    double alpha = _upleft.y - _downright.y;
+    while(alpha < L){
+        T.emplace_back(alpha);
+        alpha *= (1 + Parameter::epsilon_plum);
+    }
+    z = max(z, (int)T.size());
+    all_dp_pts.clear();
 }
 
 

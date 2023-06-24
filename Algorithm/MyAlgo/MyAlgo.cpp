@@ -107,6 +107,10 @@ void MyAlgo::display(){
 
 }
 
+double MyAlgo::get_L(){
+    return L;
+}
+
 int MyAlgo::get_counter(Square* p){
     squares.emplace_back(p);
     return squares.size()-1;
