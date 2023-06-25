@@ -448,6 +448,8 @@ map<int, bool> Square::get_dp_table(){
                             cout << "minimum distance = " << mi << endl;
                             if(st.T_id < T.size() && mi <= T[st.T_id]){
                                 cycle_pass = true;
+                            }else{
+                                is_good_state = false;
                             }
                             break;
                         }
@@ -489,29 +491,22 @@ map<int, bool> Square::get_dp_table(){
     }
     
 
-    /*
-    TOOOOOOOOOOOOO DOOOOOOOOOOOOOOOOOOO
+
     cout << "merge" << endl;
     // merge
     find_all_dp_pts();
-    // #pragma omp parallel for
-    for(auto p : P_sets){
+    for(auto states : all_dp_pts){
         double min_distance = 1e9;
-        omp_lock_t writelock;
-        omp_init_lock(&writelock);
-        // #pragma omp parallel for
         for(auto p0:children_dp_table[0]){
-            // #pragma omp parallel for
-            if(p0.first.size() == 0 && p0.second != 0){
+            // 若沒有對外的出口，且有連到點，則已有確定的 cycle 在 square 內部，即不可再連接更大的
+            if(all_dp_pts[p0.first].size() == 0 && p0.second != 0){
                 continue;
             }
             for(auto p1: children_dp_table[1]){
-                // #pragma omp parallel for
                 if(p1.first.size() == 0 && p1.second != 0){
                     continue;
                 }
                 for(auto p2:children_dp_table[2]){
-                    // #pragma omp parallel for
                     if(p2.first.size() == 0 && p2.second != 0){
                         continue;
                     }
@@ -521,11 +516,9 @@ map<int, bool> Square::get_dp_table(){
                         }      
                         if(allow_merge(p, p0.first, p1.first, p2.first, p3.first)){
                             double distance_sum = p0.second + p1.second + p2.second + p3.second;
-                            omp_set_lock(&writelock);
                             if(distance_sum != 0){
                                 min_distance = min(distance_sum, min_distance);
                             }
-                            omp_unset_lock(&writelock);
                         }
                     }
                 }
@@ -537,7 +530,7 @@ map<int, bool> Square::get_dp_table(){
             dp_table[p] = min_distance;
         }
     }
-    */
+
     dp_table_isable = true;
 
     return dp_table;

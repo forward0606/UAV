@@ -132,7 +132,7 @@ MyAlgo::~MyAlgo(){
     root = nullptr;
 }
 
-map<map<int, int>, double>  MyAlgo::get_dp_table(){
+map<int, bool>  MyAlgo::get_dp_table(){
     return root->get_dp_table();
 }
 
