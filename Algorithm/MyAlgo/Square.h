@@ -23,7 +23,8 @@ struct Portal_id{
 struct DP_PT{
     map<int, int> p;        // path selection
     int T_id;               // rounding length limit
-    DP_PT(map<int, int> _p, int _T_id);
+    bool is_self_cycle;
+    DP_PT(map<int, int> _p, int _T_id, bool _is_self_cycle);
 };
 
 
@@ -73,6 +74,7 @@ public:
     static const int Idx_RU = 2;
     static const int Idx_RD = 3;
 
+
     void make_tree_dfs();
     void display();
     void find_portal_pairs();
@@ -90,7 +92,8 @@ public:
     bool is_leaf();
     bool is_crossing(vector<int> P);
     bool over_r_limit(vector<int> P);
-    bool allow_merge(const map<int, int> &big, const map<int, int> &s0, const map<int, int> &s1, const map<int, int> &s2, const map<int, int> &s3);
+    int self_cycle_check(const DP_PT &s0, const DP_PT &s1, const DP_PT &s2, const DP_PT &s3);
+    bool allow_merge(const DP_PT &big, const DP_PT &s0, const DP_PT &s1, const DP_PT &s2, const DP_PT &s3);
 };
 
 

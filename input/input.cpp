@@ -24,13 +24,13 @@ Input::Input(const Input& r){
 
 
 Input::Input(){
-    B = 20;
+    B = 16;
     nodes.clear();
     nodes.emplace_back(0, 0);
-    nodes.emplace_back(8, 8);
-    nodes.emplace_back(0, 64);
+    nodes.emplace_back(3, 4);
+    // nodes.emplace_back(0, 64);
     nodes.emplace_back(64, 64);
-    nodes.emplace_back(64, 0);
+    // nodes.emplace_back(64, 0);
     // nodes.emplace_back(10, 10);
     // nodes.emplace_back(16, 2);
     // nodes.emplace_back(27, 23);

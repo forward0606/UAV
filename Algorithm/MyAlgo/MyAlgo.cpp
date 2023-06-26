@@ -35,8 +35,6 @@ void MyAlgo::rescale(double a, double b){// with random shift parameter (a, b)
     L = max(down_right.x - up_left.x, up_left.y - down_right.y);
     // node num
     int n = input.get_nodes().size();
-    // set cost B
-    scaled_input.set_B(input.get_B());
     // scale L * ratio =  ceil(8n/eplsion) 
     ratio = ceil(8 * n / Parameter::epsilon) / L;
     // each square size
@@ -54,10 +52,12 @@ void MyAlgo::rescale(double a, double b){// with random shift parameter (a, b)
     }
     scaled_input.set_nodes(v);
     L = L * ratio;
+    // set cost B
+    scaled_input.set_B(input.get_B() * ratio * (1 + Parameter::epsilon));
 }
 
 double MyAlgo::run(){
-    double mi = 1e9;
+    bool flag = false;
     omp_lock_t writelock;
     omp_init_lock(&writelock);
     // #pragma omp parallel for schedule(dynamic,1)
@@ -71,11 +71,11 @@ double MyAlgo::run(){
             p->make_tree();
             p->tree_travse();
             auto res = p->get_dp_table();
-            auto it = res.find(Square::P_sets[0]);
-            if( it != res.end()){
+            auto it = res.find(0);
+            if( it != res.end() && it->second){
                 
                 omp_set_lock(&writelock);
-                mi  = min(mi, it->second);            
+                flag = true;          
                 omp_unset_lock(&writelock);
 
                 cerr<<"("<<a<<", "<<b<<") = "<<it->second<<endl;
@@ -83,7 +83,7 @@ double MyAlgo::run(){
             delete p;
         }
     }
-    return mi;
+    return flag;
 }
 
 void MyAlgo::tree_travse(){

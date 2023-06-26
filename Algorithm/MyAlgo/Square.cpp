@@ -9,8 +9,8 @@ void Portal_id::display(){
     cout << "This is a portal: dir = " << dir << ", idx = " << idx << endl;
 }
 
-DP_PT::DP_PT(map<int, int> _p, int _T_id)
-    :p(_p), T_id(_T_id){}
+DP_PT::DP_PT(map<int, int> _p, int _T_id, bool _is_self_cycle)
+    :p(_p), T_id(_T_id), is_self_cycle(_is_self_cycle){}
 
 int Square::get_id(){
     return id;
@@ -175,9 +175,17 @@ void Square::find_all_dp_pts(vector<DP_PT> &states){
         all_dp_pts.emplace_back(states);
         return;
     }
+
+    for(int t_id=0;t_id<z;t_id++){
+        map<int, int> p;
+        states.emplace_back(p, t_id, true);
+        find_all_dp_pts(states);
+        states.pop_back();
+    }
+    
     for(auto p : P_sets){
         for(int t_id=0;t_id<z;t_id++){
-            states.emplace_back(p, t_id);
+            states.emplace_back(p, t_id, false);
             find_all_dp_pts(states);
             states.pop_back();
         }
@@ -247,12 +255,36 @@ void Square::display(){
     cout << "parent id: " << (parent == nullptr ? -1 : parent->id) << endl;
 }
 
-bool Square::allow_merge(const map<int, int> &big, const map<int, int> &s0,\
-                         const map<int, int> &s1, const map<int, int> &s2, const map<int, int> &s3){
+int Square::self_cycle_check(const DP_PT &s0, const DP_PT &s1, const DP_PT &s2, const DP_PT &s3){
+    assert(s0.is_self_cycle == true);
+    if(s1.is_self_cycle || s2.is_self_cycle || s3.is_self_cycle){
+        return false;
+    }
+    if(!s1.p.empty() || !s2.p.empty() || !s3.p.empty()){
+        return false;
+    }
+    return true;
+}
+
+
+bool Square::allow_merge(const DP_PT &big, const DP_PT &s0,\
+                         const DP_PT &s1, const DP_PT &s2, const DP_PT &s3){
+    if(s0.is_self_cycle){
+        return self_cycle_check(s0, s1, s2, s3);
+    }
+    if(s1.is_self_cycle){
+        return self_cycle_check(s1, s0, s2, s3);
+    }
+    if(s2.is_self_cycle){
+        return self_cycle_check(s2, s1, s0, s3);
+    }
+    if(s3.is_self_cycle){
+        return self_cycle_check(s3, s1, s2, s0);
+    }
     map<Coord, int> cnt_node_degree;
     map<Coord, vector<Coord>> adj;
     map<Coord, int> vis_big, vis_small;
-    for(auto i:big){
+    for(auto i:big.p){
         pair<Portal_id, Portal_id> path = portal_pairs[i.first];
         Coord a = get_Portal_Coord(path.first);
         Coord b = get_Portal_Coord(path.second);
@@ -262,7 +294,7 @@ bool Square::allow_merge(const map<int, int> &big, const map<int, int> &s0,\
         vis_big[b] = -1;
     }
 
-    for(auto i:s0){
+    for(auto i:s0.p){
         pair<Portal_id, Portal_id> path = portal_pairs[i.first];
         Coord a = children[0]->get_Portal_Coord(path.first);
         Coord b = children[0]->get_Portal_Coord(path.second);
@@ -274,7 +306,7 @@ bool Square::allow_merge(const map<int, int> &big, const map<int, int> &s0,\
         vis_small[b] = -1;
     }
 
-    for(auto i:s1){
+    for(auto i:s1.p){
         pair<Portal_id, Portal_id> path = portal_pairs[i.first];
         Coord a = children[1]->get_Portal_Coord(path.first);
         Coord b = children[1]->get_Portal_Coord(path.second);
@@ -286,7 +318,7 @@ bool Square::allow_merge(const map<int, int> &big, const map<int, int> &s0,\
         vis_small[b] = -1;
     }
 
-    for(auto i:s2){
+    for(auto i:s2.p){
         pair<Portal_id, Portal_id> path = portal_pairs[i.first];
         Coord a = children[2]->get_Portal_Coord(path.first);
         Coord b = children[2]->get_Portal_Coord(path.second);
@@ -298,7 +330,7 @@ bool Square::allow_merge(const map<int, int> &big, const map<int, int> &s0,\
         vis_small[b] = -1;
     }
 
-    for(auto i:s3){
+    for(auto i:s3.p){
         pair<Portal_id, Portal_id> path = portal_pairs[i.first];
         Coord a = children[3]->get_Portal_Coord(path.first);
         Coord b = children[3]->get_Portal_Coord(path.second);
@@ -364,10 +396,14 @@ map<int, bool> Square::get_dp_table(){
         cout << "node_list == 0" << endl;
         find_all_dp_pts();
         
-        for(int state_id = 0;state_id < all_dp_pts.size();state_id++){
+        for(int state_id = 0;state_id < (int)all_dp_pts.size();state_id++){
             vector<DP_PT> states = all_dp_pts[state_id];
             bool is_good_state = true;
             for(DP_PT st:states){
+                if(st.is_self_cycle){
+                    is_good_state = false;
+                    break;
+                }
                 double distance_sum = 0;
                 bool flag = true;                   //eliminate self cycle
                 for(auto it:st.p){
@@ -402,11 +438,15 @@ map<int, bool> Square::get_dp_table(){
         cout << "node(x, y) = (" << node_list[0].x << ", " << node_list[0].y << ")" << endl;
         find_all_dp_pts();
 
-        for(int state_id = 0;state_id < all_dp_pts.size();state_id++){
+        for(int state_id = 0;state_id < (int)all_dp_pts.size();state_id++){
             vector<DP_PT> states = all_dp_pts[state_id];
             bool is_good_state = true;
             bool cycle_pass = false;                // exist any cycle can go through the internal node
             for(DP_PT st:states){
+                if(st.is_self_cycle){
+                    is_good_state = true;
+                    continue;
+                }
                 double distance_sum = 0;
                 bool flag = true;                   //eliminate self cycle
                 int self_cycle = 0;
@@ -446,7 +486,7 @@ map<int, bool> Square::get_dp_table(){
                             double pass_node = AlgorithmBase::distance(a, node_list[0]) + AlgorithmBase::distance(b, node_list[0]);
                             mi = min(mi, distance_sum - AlgorithmBase::distance(a, b) + pass_node);
                             cout << "minimum distance = " << mi << endl;
-                            if(st.T_id < T.size() && mi <= T[st.T_id]){
+                            if(st.T_id < (int)T.size() && mi <= T[st.T_id]){
                                 cycle_pass = true;
                             }else{
                                 is_good_state = false;
@@ -465,7 +505,7 @@ map<int, bool> Square::get_dp_table(){
                         mi = min(mi, distance_sum - AlgorithmBase::distance(a, b) + pass_node);
                     }
                     cout << "minimum distance = " << mi << endl;
-                    if(st.T_id < T.size() && mi <= T[st.T_id]){
+                    if(st.T_id < (int)T.size() && mi <= T[st.T_id]){
                         cycle_pass = true;
                     }
                 }
@@ -495,41 +535,52 @@ map<int, bool> Square::get_dp_table(){
     cout << "merge" << endl;
     // merge
     find_all_dp_pts();
-    for(auto states : all_dp_pts){
-        double min_distance = 1e9;
+
+    for(int state_id = 0;state_id < (int)all_dp_pts.size();state_id++){
+        vector<DP_PT> states = all_dp_pts[state_id];
+        bool is_good_state = true;
         for(auto p0:children_dp_table[0]){
-            // 若沒有對外的出口，且有連到點，則已有確定的 cycle 在 square 內部，即不可再連接更大的
-            if(all_dp_pts[p0.first].size() == 0 && p0.second != 0){
+            vector<DP_PT> states0 = all_dp_pts[p0.first];
+            if(!p0.second){
                 continue;
             }
             for(auto p1: children_dp_table[1]){
-                if(p1.first.size() == 0 && p1.second != 0){
+                vector<DP_PT> states1 = all_dp_pts[p1.first];
+                if(!p1.second){
                     continue;
                 }
                 for(auto p2:children_dp_table[2]){
-                    if(p2.first.size() == 0 && p2.second != 0){
+                    vector<DP_PT> states2 = all_dp_pts[p2.first];
+                    if(!p2.second){
                         continue;
                     }
                     for(auto p3:children_dp_table[3]){
-                        if(p3.first.size() == 0 && p3.second != 0){
+                        if(!p3.second){
                             continue;
-                        }      
-                        if(allow_merge(p, p0.first, p1.first, p2.first, p3.first)){
-                            double distance_sum = p0.second + p1.second + p2.second + p3.second;
-                            if(distance_sum != 0){
-                                min_distance = min(distance_sum, min_distance);
+                        }
+                        vector<DP_PT> states3 = all_dp_pts[p3.first];
+                        bool good_cycle = true;
+                        for(int cycle=0;cycle<Parameter::k;cycle++){
+                            if(allow_merge(states[cycle], states0[cycle], states1[cycle], states2[cycle], states3[cycle])){
+                                double distance_sum = children[0]->T[states0[cycle].T_id];
+                                distance_sum += children[1]->T[states1[cycle].T_id];
+                                distance_sum += children[2]->T[states2[cycle].T_id];
+                                distance_sum += children[3]->T[states3[cycle].T_id];
+                                if(T[states[cycle].T_id] < distance_sum){
+                                    good_cycle = false;
+                                }
                             }
+                        }
+                        if(good_cycle){
+                            is_good_state = true;
                         }
                     }
                 }
             }
         }
-        
-        
-        if(min_distance - 1e9 < EPS){
-            dp_table[p] = min_distance;
-        }
+        dp_table[state_id] = is_good_state;
     }
+
 
     dp_table_isable = true;
 
