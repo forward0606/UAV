@@ -63,7 +63,7 @@ double MyAlgo::run(){
     // #pragma omp parallel for schedule(dynamic,1)
     rescale(0, 0);
     cerr<<"L = "<<L<<endl;
-    #pragma omp parallel for schedule(dynamic,1) collapse(2)
+    // #pragma omp parallel for schedule(dynamic,1) collapse(2)
     for(int a = 0;a<(int)L;a++){
         for(int b = 0;b<(int)L;b++){
             MyAlgo *p = new MyAlgo(input);

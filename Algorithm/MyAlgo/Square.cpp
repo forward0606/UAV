@@ -557,7 +557,7 @@ map<int, bool> Square::get_dp_table(){
     cout << "merge" << endl;
     // merge
     find_all_dp_pts();
-
+    #pragma omp parallel for
     for(int state_id = 0;state_id < (int)all_dp_pts.size();state_id++){
         vector<DP_PT> states = all_dp_pts[state_id];
         bool is_good_state = true;
