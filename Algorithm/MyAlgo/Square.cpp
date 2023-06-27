@@ -121,6 +121,23 @@ bool Square::over_r_limit(vector<int> P){
     return false;
 }
 
+bool Square::over_r_limit(vector<DP_PT> states){
+    int dir_cnt[4] = {0};
+    for(DP_PT st:states){
+        for(pair<int, int> path_id:st.p){
+            pair<Portal_id, Portal_id> path = portal_pairs[path_id.first];
+            dir_cnt[path.first.dir]++;
+            dir_cnt[path.second.dir]++;
+        }
+    }
+    for(int dir = 0;dir < 4;dir++){
+        if(dir_cnt[dir] > Parameter::r){
+            return true;
+        }
+    }
+    return false;
+}
+
 Coord Square::get_Portal_Coord(const Portal_id &p_id)const{
     return portal[p_id.dir][p_id.idx];
 }
@@ -171,6 +188,10 @@ void Square::find_P_sets(){
 
 void Square::find_all_dp_pts(vector<DP_PT> &states){
     
+    if(over_r_limit(states)){
+        return;
+    }
+
     if(states.size() == Parameter::k){
         all_dp_pts.emplace_back(states);
         return;
@@ -191,6 +212,7 @@ void Square::find_all_dp_pts(vector<DP_PT> &states){
         }
     }
 }
+
 void Square::find_all_dp_pts(){
     find_P_sets();
     if(all_dp_pts_isable){
