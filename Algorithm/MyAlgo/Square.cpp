@@ -630,16 +630,16 @@ void Square::make_tree_dfs(){
             v[Idx_RD].emplace_back(i);
         }
     }
-    children[Idx_LU] = new Square(corner[Idx_LU], mid, v[Idx_LU], this, algoptr);
+    children[Idx_LU] = new Square(corner[Idx_LU], mid, v[Idx_LU], this, algoptr, depth + 1);
     children[Idx_LU] -> id = algoptr -> get_counter(children[Idx_LU]);
     
-    children[Idx_LD] = new Square(make_pair(corner[Idx_LD].x, mid.y), make_pair(mid.x, corner[Idx_LD].y), v[Idx_LD], this, algoptr);
+    children[Idx_LD] = new Square(make_pair(corner[Idx_LD].x, mid.y), make_pair(mid.x, corner[Idx_LD].y), v[Idx_LD], this, algoptr, depth + 1);
     children[Idx_LD] -> id = algoptr -> get_counter(children[Idx_LD]);
     
-    children[Idx_RU] = new Square(make_pair(mid.x, corner[Idx_RU].y), make_pair(corner[Idx_RU].x, mid.y), v[Idx_RU], this, algoptr);
+    children[Idx_RU] = new Square(make_pair(mid.x, corner[Idx_RU].y), make_pair(corner[Idx_RU].x, mid.y), v[Idx_RU], this, algoptr, depth + 1);
     children[Idx_RU] -> id = algoptr -> get_counter(children[Idx_RU]);
     
-    children[Idx_RD] = new Square(mid, corner[Idx_RD], v[Idx_RD], this, algoptr);
+    children[Idx_RD] = new Square(mid, corner[Idx_RD], v[Idx_RD], this, algoptr, depth + 1);
     children[Idx_RD] -> id = algoptr -> get_counter(children[Idx_RD]);
 
     for(int i = 0;i < 4;i++){
@@ -648,8 +648,8 @@ void Square::make_tree_dfs(){
 }
 
 
-Square::Square(Coord _upleft, Coord _downright, vector<Coord> _node_list, Square *_parent, MyAlgo * ptr)
-    :node_list(_node_list), parent(_parent), dp_table_isable(false), algoptr(ptr){
+Square::Square(Coord _upleft, Coord _downright, vector<Coord> _node_list, Square *_parent, MyAlgo * ptr, int dep)
+    :depth(dep), node_list(_node_list), parent(_parent), dp_table_isable(false), algoptr(ptr){
     for(int i = 0;i < 4;i++){
         children[i] = nullptr;
     }
@@ -671,6 +671,8 @@ Square::Square(Coord _upleft, Coord _downright, vector<Coord> _node_list, Square
     T.clear();
     double L = algoptr -> get_L();
     L *= L;
+    L /= (1 << depth);
+    L = min(L, algoptr -> get_scaled_input().get_B());
     double alpha = _upleft.y - _downright.y;
     while(alpha < L){
         T.emplace_back(alpha);

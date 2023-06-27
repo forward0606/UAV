@@ -30,6 +30,7 @@ struct DP_PT{
 
 class Square{
     int id;
+    int depth;
     vector<Coord> node_list;            // the node in the square
     vector<Coord> portal[4];            // the portal list in the square
     Coord corner[4];
@@ -87,7 +88,7 @@ public:
     Square* get_child(int idx);
     int get_id();
     Coord get_Portal_Coord(const Portal_id &p_id)const;
-    Square(Coord _upleft, Coord _downright, vector<Coord> _node_list, Square *_parent, MyAlgo * ptr);
+    Square(Coord _upleft, Coord _downright, vector<Coord> _node_list, Square *_parent, MyAlgo * ptr, int dep);
     ~Square();
     bool is_leaf();
     bool is_crossing(vector<int> P);

@@ -111,6 +111,10 @@ double MyAlgo::get_L(){
     return L;
 }
 
+Input MyAlgo::get_scaled_input(){
+    return scaled_input;
+}
+
 int MyAlgo::get_counter(Square* p){
     squares.emplace_back(p);
     return squares.size()-1;
@@ -122,7 +126,7 @@ void MyAlgo::make_tree(){
         L_plum *= 2;
     }
     squares.clear();
-    root = new Square(Coord(0, L_plum), Coord(L_plum, 0), scaled_input.get_nodes(), nullptr, this);
+    root = new Square(Coord(0, L_plum), Coord(L_plum, 0), scaled_input.get_nodes(), nullptr, this, 0);
     root -> set_id(get_counter(root));
     root -> make_tree_dfs();
 }

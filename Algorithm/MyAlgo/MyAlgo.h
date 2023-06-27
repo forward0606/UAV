@@ -25,6 +25,7 @@ public:
     void display();
     void rescale(double a, double b);
     void make_tree();
+    Input get_scaled_input();
     int get_counter(Square* p);
     double get_L();
     map<int, bool>  get_dp_table();
