@@ -21,10 +21,12 @@ struct Portal_id{
 };
 
 struct DP_PT{
+    int id;
     map<int, int> p;        // path selection
     int T_id;               // rounding length limit
     bool is_self_cycle;
-    DP_PT(map<int, int> _p, int _T_id, bool _is_self_cycle);
+    DP_PT(int _id, map<int, int> _p, int _T_id, bool _is_self_cycle);
+    bool operator<(const DP_PT &r)const;
 };
 
 

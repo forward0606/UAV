@@ -9,8 +9,15 @@ void Portal_id::display(){
     cout << "This is a portal: dir = " << dir << ", idx = " << idx << endl;
 }
 
-DP_PT::DP_PT(map<int, int> _p, int _T_id, bool _is_self_cycle)
-    :p(_p), T_id(_T_id), is_self_cycle(_is_self_cycle){}
+DP_PT::DP_PT(int _id, map<int, int> _p, int _T_id, bool _is_self_cycle)
+    :id(_id), p(_p), T_id(_T_id), is_self_cycle(_is_self_cycle){}
+
+bool DP_PT::operator<(const DP_PT &r)const{
+    if(id != r.id){
+        return id < r.id;
+    }
+    return T_id < r.T_id;
+}
 
 int Square::get_id(){
     return id;
@@ -199,14 +206,21 @@ void Square::find_all_dp_pts(vector<DP_PT> &states){
 
     for(int t_id=0;t_id<z;t_id++){
         map<int, int> p;
-        states.emplace_back(p, t_id, true);
+        if(states.size() > 1 && DP_PT(-1, p, t_id, true) < states.back()){
+            continue;
+        }
+        states.emplace_back(-1, p, t_id, true);
         find_all_dp_pts(states);
         states.pop_back();
     }
     
-    for(auto p : P_sets){
+    for(int p_id = 0;p_id < (int)P_sets.size();p_id++){
+        map<int, int> p  = P_sets[p_id];
         for(int t_id=0;t_id<z;t_id++){
-            states.emplace_back(p, t_id, false);
+            if(states.size() > 1 && DP_PT(p_id, p, t_id, false) < states.back()){
+                continue;
+            }
+            states.emplace_back(p_id, p, t_id, false);
             find_all_dp_pts(states);
             states.pop_back();
         }
@@ -734,39 +748,11 @@ map<int, bool> Square::get_dp_table(){
             if(!p0.second){
                 continue;
             }
-            bool next = false;
-            for(int cycle=0;cycle<Parameter::k;cycle++){
-                if(!allow_merge(states[cycle], states0[cycle])){
-                    next = true;
-                    break;
-                }
-            }
-            if(next){
-                continue;
-            }
-            for(auto p1: children_dp_table[1]){
-                vector<DP_PT> states1 = all_dp_pts[p1.first];
-                if(!p1.second){
-                    continue;
-                }
-                next = false;
-                for(int cycle=0;cycle<Parameter::k;cycle++){
-                    if(!allow_merge(states[cycle], states0[cycle], states1[cycle])){
-                        next = true;
-                        break;
-                    }
-                }
-                if(next){
-                    continue;
-                }
-                for(auto p2:children_dp_table[2]){
-                    vector<DP_PT> states2 = all_dp_pts[p2.first];
-                    if(!p2.second){
-                        continue;
-                    }
-                    next = false;
+            do{
+                {
+                    bool next = false;
                     for(int cycle=0;cycle<Parameter::k;cycle++){
-                        if(!allow_merge(states[cycle], states0[cycle], states1[cycle], states2[cycle])){
+                        if(!allow_merge(states[cycle], states0[cycle])){
                             next = true;
                             break;
                         }
@@ -774,29 +760,72 @@ map<int, bool> Square::get_dp_table(){
                     if(next){
                         continue;
                     }
-                    for(auto p3:children_dp_table[3]){
-                        if(!p3.second){
-                            continue;
-                        }
-                        vector<DP_PT> states3 = all_dp_pts[p3.first];
-                        bool good_cycle = true;
-                        for(int cycle=0;cycle<Parameter::k;cycle++){
-                            if(allow_merge(states[cycle], states0[cycle], states1[cycle], states2[cycle], states3[cycle])){
-                                double distance_sum = children[0]->T[states0[cycle].T_id];
-                                distance_sum += children[1]->T[states1[cycle].T_id];
-                                distance_sum += children[2]->T[states2[cycle].T_id];
-                                distance_sum += children[3]->T[states3[cycle].T_id];
-                                if(T[states[cycle].T_id] < distance_sum){
-                                    good_cycle = false;
+                }
+                for(auto p1: children_dp_table[1]){
+                    vector<DP_PT> states1 = all_dp_pts[p1.first];
+                    if(!p1.second){
+                        continue;
+                    }
+                    do{
+                        {
+                            bool next = false;
+                            for(int cycle=0;cycle<Parameter::k;cycle++){
+                                if(!allow_merge(states[cycle], states0[cycle], states1[cycle])){
+                                    next = true;
+                                    break;
                                 }
                             }
+                            if(next){
+                                continue;
+                            }
                         }
-                        if(good_cycle){
-                            is_good_state = true;
+                        for(auto p2:children_dp_table[2]){
+                            vector<DP_PT> states2 = all_dp_pts[p2.first];
+                            if(!p2.second){
+                                continue;
+                            }
+                            do{
+                                {
+                                    bool next = false;
+                                    for(int cycle=0;cycle<Parameter::k;cycle++){
+                                        if(!allow_merge(states[cycle], states0[cycle], states1[cycle], states2[cycle])){
+                                            next = true;
+                                            break;
+                                        }
+                                    }
+                                    if(next){
+                                        continue;
+                                    }
+                                }
+                                for(auto p3:children_dp_table[3]){
+                                    vector<DP_PT> states3 = all_dp_pts[p3.first];
+                                    if(!p3.second){
+                                        continue;
+                                    }
+                                    do{
+                                        bool good_cycle = true;
+                                        for(int cycle=0;cycle<Parameter::k;cycle++){
+                                            if(allow_merge(states[cycle], states0[cycle], states1[cycle], states2[cycle], states3[cycle])){
+                                                double distance_sum = children[0]->T[states0[cycle].T_id];
+                                                distance_sum += children[1]->T[states1[cycle].T_id];
+                                                distance_sum += children[2]->T[states2[cycle].T_id];
+                                                distance_sum += children[3]->T[states3[cycle].T_id];
+                                                if(T[states[cycle].T_id] < distance_sum){
+                                                    good_cycle = false;
+                                                }
+                                            }
+                                        }
+                                        if(good_cycle){
+                                            is_good_state = true;
+                                        }
+                                    }while(next_permutation(states3.begin(), states3.end()));
+                                }
+                            }while(next_permutation(states2.begin(), states2.end()));
                         }
-                    }
+                    }while(next_permutation(states1.begin(), states1.end()));
+                    
                 }
-            }
+            }while(next_permutation(states0.begin(), states.end()));
         }
         dp_table[state_id] = is_good_state;
     }
