@@ -206,7 +206,7 @@ void Square::find_all_dp_pts(vector<DP_PT> &states){
 
     for(int t_id=0;t_id<z;t_id++){
         map<int, int> p;
-        if(states.size() > 1 && DP_PT(-1, p, t_id, true) < states.back()){
+        if(states.size() >= 1 && DP_PT(-1, p, t_id, true) < states.back()){
             continue;
         }
         states.emplace_back(-1, p, t_id, true);
@@ -217,7 +217,7 @@ void Square::find_all_dp_pts(vector<DP_PT> &states){
     for(int p_id = 0;p_id < (int)P_sets.size();p_id++){
         map<int, int> p  = P_sets[p_id];
         for(int t_id=0;t_id<z;t_id++){
-            if(states.size() > 1 && DP_PT(p_id, p, t_id, false) < states.back()){
+            if(states.size() >= 1 && DP_PT(p_id, p, t_id, false) < states.back()){
                 continue;
             }
             states.emplace_back(p_id, p, t_id, false);
