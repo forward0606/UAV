@@ -277,6 +277,7 @@ void Square::display(){
     cout << "parent id: " << (parent == nullptr ? -1 : parent->id) << endl;
 }
 
+
 int Square::self_cycle_check(const DP_PT &s0, const DP_PT &s1, const DP_PT &s2, const DP_PT &s3){
     assert(s0.is_self_cycle == true);
     if(s1.is_self_cycle || s2.is_self_cycle || s3.is_self_cycle){
@@ -289,19 +290,186 @@ int Square::self_cycle_check(const DP_PT &s0, const DP_PT &s1, const DP_PT &s2, 
 }
 
 
+bool Square::allow_merge(const DP_PT &big, const DP_PT &s0){
+    if(s0.is_self_cycle){
+        // 小 portal 有 self cycle 則大 portal 則必定要是 self cycle
+        return big.is_self_cycle;
+    }
+    
+    Coord g = corner[Idx_LU];
+    int cnt = 0;
+    for(auto i:big.p){
+        pair<Portal_id, Portal_id> path = portal_pairs[i.first];
+        Coord a = get_Portal_Coord(path.first);
+        Coord b = get_Portal_Coord(path.second);
+        if(a == g){
+            cnt++;
+        }
+        if(b == g){
+            cnt++;
+        }
+    }
+    for(auto i:s0.p){
+        pair<Portal_id, Portal_id> path = portal_pairs[i.first];
+        Coord a = get_Portal_Coord(path.first);
+        Coord b = get_Portal_Coord(path.second);
+        if(a == g){
+            cnt++;
+        }
+        if(b == g){
+            cnt++;
+        }
+    }
+    return (cnt % 2) == 0;
+}
+
+
+bool Square::allow_merge(const DP_PT &big, const DP_PT &s0, const DP_PT &s1){
+    if(s0.is_self_cycle){
+        return big.is_self_cycle && self_cycle_check(s0, s1, s1, s1);
+    }
+    if(s1.is_self_cycle){
+        return big.is_self_cycle && self_cycle_check(s1, s0, s0, s0);
+    }
+    
+    vector<Coord> check_list;
+    vector<int> cnt;
+    check_list.emplace_back(corner[Idx_LD]);
+    cnt.emplace_back(0);
+    check_list.emplace_back(children[Idx_LD]->corner[Idx_LU]);
+    cnt.emplace_back(0);
+
+    for(auto i:big.p){
+        pair<Portal_id, Portal_id> path = portal_pairs[i.first];
+        Coord a = get_Portal_Coord(path.first);
+        Coord b = get_Portal_Coord(path.second);
+        for(int j=0;j<(int)check_list.size();j++){
+            Coord g = check_list[j];
+            if(a == g){
+                cnt[j]++;
+            }
+            if(b == g){
+                cnt[j]++;
+            }
+        }
+    }
+    for(auto i:s0.p){
+        pair<Portal_id, Portal_id> path = portal_pairs[i.first];
+        Coord a = get_Portal_Coord(path.first);
+        Coord b = get_Portal_Coord(path.second);
+        for(int j=0;j<(int)check_list.size();j++){
+            Coord g = check_list[j];
+            if(a == g){
+                cnt[j]++;
+            }
+            if(b == g){
+                cnt[j]++;
+            }
+        }
+    }
+    for(auto i:s1.p){
+        pair<Portal_id, Portal_id> path = portal_pairs[i.first];
+        Coord a = get_Portal_Coord(path.first);
+        Coord b = get_Portal_Coord(path.second);
+        for(int j=0;j<(int)check_list.size();j++){
+            Coord g = check_list[j];
+            if(a == g){
+                cnt[j]++;
+            }
+            if(b == g){
+                cnt[j]++;
+            }
+        }
+    }
+    for(int e:cnt){
+        if(e % 2 != 0){
+            return false;
+        }
+    }
+    return true;
+}
+
+bool Square::allow_merge(const DP_PT &big, const DP_PT &s0, const DP_PT &s1, const DP_PT &s2){
+    if(s0.is_self_cycle){
+        return big.is_self_cycle && self_cycle_check(s0, s1, s2, s1);
+    }
+    if(s1.is_self_cycle){
+        return big.is_self_cycle && self_cycle_check(s1, s0, s2, s0);
+    }
+    if(s2.is_self_cycle){
+        return big.is_self_cycle && self_cycle_check(s2, s0, s1, s1);
+    }
+    vector<Coord> check_list;
+    vector<int> cnt;
+    check_list.emplace_back(corner[Idx_RU]);
+    cnt.emplace_back(0);
+    check_list.emplace_back(children[Idx_RU]->corner[Idx_LU]);
+    cnt.emplace_back(0);
+
+    for(auto i:big.p){
+        pair<Portal_id, Portal_id> path = portal_pairs[i.first];
+        Coord a = get_Portal_Coord(path.first);
+        Coord b = get_Portal_Coord(path.second);
+        for(int j=0;j<(int)check_list.size();j++){
+            Coord g = check_list[j];
+            if(a == g){
+                cnt[j]++;
+            }
+            if(b == g){
+                cnt[j]++;
+            }
+        }
+    }
+    for(auto i:s0.p){
+        pair<Portal_id, Portal_id> path = portal_pairs[i.first];
+        Coord a = get_Portal_Coord(path.first);
+        Coord b = get_Portal_Coord(path.second);
+        for(int j=0;j<(int)check_list.size();j++){
+            Coord g = check_list[j];
+            if(a == g){
+                cnt[j]++;
+            }
+            if(b == g){
+                cnt[j]++;
+            }
+        }
+    }
+    for(auto i:s2.p){
+        pair<Portal_id, Portal_id> path = portal_pairs[i.first];
+        Coord a = get_Portal_Coord(path.first);
+        Coord b = get_Portal_Coord(path.second);
+        for(int j=0;j<(int)check_list.size();j++){
+            Coord g = check_list[j];
+            if(a == g){
+                cnt[j]++;
+            }
+            if(b == g){
+                cnt[j]++;
+            }
+        }
+    }
+    for(int e:cnt){
+        if(e % 2 != 0){
+            return false;
+        }
+    }
+    return true;
+}
+
+
 bool Square::allow_merge(const DP_PT &big, const DP_PT &s0,\
                          const DP_PT &s1, const DP_PT &s2, const DP_PT &s3){
     if(s0.is_self_cycle){
-        return self_cycle_check(s0, s1, s2, s3);
+        return big.is_self_cycle && self_cycle_check(s0, s1, s2, s3);
     }
     if(s1.is_self_cycle){
-        return self_cycle_check(s1, s0, s2, s3);
+        return big.is_self_cycle && self_cycle_check(s1, s0, s2, s3);
     }
     if(s2.is_self_cycle){
-        return self_cycle_check(s2, s1, s0, s3);
+        return big.is_self_cycle && self_cycle_check(s2, s1, s0, s3);
     }
     if(s3.is_self_cycle){
-        return self_cycle_check(s3, s1, s2, s0);
+        return big.is_self_cycle && self_cycle_check(s3, s1, s2, s0);
     }
     map<Coord, int> cnt_node_degree;
     map<Coord, vector<Coord>> adj;
@@ -566,14 +734,44 @@ map<int, bool> Square::get_dp_table(){
             if(!p0.second){
                 continue;
             }
+            bool next = false;
+            for(int cycle=0;cycle<Parameter::k;cycle++){
+                if(!allow_merge(states[cycle], states0[cycle])){
+                    next = true;
+                    break;
+                }
+            }
+            if(next){
+                continue;
+            }
             for(auto p1: children_dp_table[1]){
                 vector<DP_PT> states1 = all_dp_pts[p1.first];
                 if(!p1.second){
                     continue;
                 }
+                next = false;
+                for(int cycle=0;cycle<Parameter::k;cycle++){
+                    if(!allow_merge(states[cycle], states0[cycle], states1[cycle])){
+                        next = true;
+                        break;
+                    }
+                }
+                if(next){
+                    continue;
+                }
                 for(auto p2:children_dp_table[2]){
                     vector<DP_PT> states2 = all_dp_pts[p2.first];
                     if(!p2.second){
+                        continue;
+                    }
+                    next = false;
+                    for(int cycle=0;cycle<Parameter::k;cycle++){
+                        if(!allow_merge(states[cycle], states0[cycle], states1[cycle], states2[cycle])){
+                            next = true;
+                            break;
+                        }
+                    }
+                    if(next){
                         continue;
                     }
                     for(auto p3:children_dp_table[3]){
@@ -672,6 +870,7 @@ Square::Square(Coord _upleft, Coord _downright, vector<Coord> _node_list, Square
     double L = algoptr -> get_L();
     L *= L;
     L /= (1 << depth);
+    L /= Parameter::m + 1;
     L = min(L, algoptr -> get_scaled_input().get_B());
     double alpha = _upleft.y - _downright.y;
     while(alpha < L){

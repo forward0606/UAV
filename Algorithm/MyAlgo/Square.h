@@ -95,6 +95,9 @@ public:
     bool over_r_limit(vector<int> P);
     bool over_r_limit(vector<DP_PT> states);
     int self_cycle_check(const DP_PT &s0, const DP_PT &s1, const DP_PT &s2, const DP_PT &s3);
+    bool allow_merge(const DP_PT &big, const DP_PT &s0);
+    bool allow_merge(const DP_PT &big, const DP_PT &s0, const DP_PT &s1);
+    bool allow_merge(const DP_PT &big, const DP_PT &s0, const DP_PT &s1, const DP_PT &s2);
     bool allow_merge(const DP_PT &big, const DP_PT &s0, const DP_PT &s1, const DP_PT &s2, const DP_PT &s3);
 };
 
