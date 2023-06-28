@@ -825,7 +825,7 @@ map<int, bool> Square::get_dp_table(){
                     }while(next_permutation(states1.begin(), states1.end()));
                     
                 }
-            }while(next_permutation(states0.begin(), states.end()));
+            }while(next_permutation(states0.begin(), states0.end()));
         }
         dp_table[state_id] = is_good_state;
     }
