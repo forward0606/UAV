@@ -630,8 +630,6 @@ map<int, bool> Square::get_dp_table(){
             }
             if(is_good_state){
                 dp_table[state_id] = true;
-            }else{
-                dp_table[state_id] = false;
             }
         }
         dp_table_isable = true;
@@ -717,11 +715,14 @@ map<int, bool> Square::get_dp_table(){
             }
             if(is_good_state && cycle_pass){
                 dp_table[state_id] = true;
-            }else{
-                dp_table[state_id] = false;
             }
         }
         dp_table_isable = true;
+        // //random 亂剪枝
+        // map<int, bool> random_dp_table;
+        // for(auto iter:dp_table){
+
+        // }
         return dp_table;
     }
 
@@ -827,7 +828,9 @@ map<int, bool> Square::get_dp_table(){
                 }
             }while(next_permutation(states0.begin(), states0.end()));
         }
-        dp_table[state_id] = is_good_state;
+        if(is_good_state){
+            dp_table[state_id] = true;
+        }
     }
 
 
