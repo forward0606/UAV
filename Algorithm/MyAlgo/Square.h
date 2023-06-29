@@ -11,6 +11,7 @@ class MyAlgo;
 #include <cassert>
 #include <omp.h>
 #include <queue>
+#include <random>
 #define EPS 1e-9
 using namespace std;
 

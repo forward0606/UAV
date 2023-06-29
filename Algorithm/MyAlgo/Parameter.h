@@ -8,7 +8,7 @@ public:
     static constexpr double epsilon = 5.0;
     static constexpr double epsilon_plum = 2.0;
     static constexpr double k = 2;
-    static constexpr double random_delete = 0.1;
+    static constexpr double random_keep_ratio = 0.2;
 };
 
 #endif
