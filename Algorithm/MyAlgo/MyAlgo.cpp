@@ -80,6 +80,10 @@ double MyAlgo::run(){
 
                 cerr<<"("<<a<<", "<<b<<") = "<<it->second<<endl;
             }
+            cerr<<"dp table on root"<<endl;
+            for(auto it:res){
+                cerr<<"id: "<<it.first<<", value "<<it.second<<endl;
+            }
             delete p;
         }
     }
