@@ -28,9 +28,9 @@ Input::Input(){
     nodes.clear();
     nodes.emplace_back(12, 12);
     nodes.emplace_back(18, 12);
-    // nodes.emplace_back(0, 64);
-    nodes.emplace_back(32, 32);
-    // nodes.emplace_back(64, 0);
+    nodes.emplace_back(0, 64);
+    nodes.emplace_back(64, 64);
+    nodes.emplace_back(64, 0);
     // nodes.emplace_back(10, 10);
     // nodes.emplace_back(16, 2);
     // nodes.emplace_back(27, 23);

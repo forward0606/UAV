@@ -84,6 +84,7 @@ double MyAlgo::run(){
             for(auto it:res){
                 cerr<<"id: "<<it.first<<", value "<<it.second<<endl;
             }
+            cerr<<endl;
             delete p;
         }
     }
