@@ -87,6 +87,7 @@ public:
     void find_all_dp_pts(vector<DP_PT> &states);
     void find_all_dp_pts();
     void set_id(int _id);
+    void random_delete();
     map<int, bool> get_dp_table();
     Square* get_child(int idx);
     int get_id();

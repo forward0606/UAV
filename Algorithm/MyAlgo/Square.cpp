@@ -28,8 +28,14 @@ Square *Square::get_child(int idx){
 }
 
 void Square::find_portal_pairs(){
+    
     cout << "find portal pairs" << endl;
     portal_pairs.clear();
+    
+    portal_pairs.emplace_back(Portal_id(0, 0), Portal_id(3, 0));
+    portal_pairs.emplace_back(Portal_id(1, 0), Portal_id(2, 0));
+    return;
+    
     vector<Portal_id> v;
     for(int dir = 0;dir < 4;dir++){
         for(int i = 0;i <= Parameter::m;i++){
@@ -588,6 +594,33 @@ bool Square::allow_merge(const DP_PT &big, const DP_PT &s0,\
     return true;
 }
 
+void Square::random_delete(){
+    //random 亂剪枝
+    random_device rd;  // Will be used to obtain a seed for the random number engine
+    mt19937 gen(rd()); // Standard mersenne_twister_engine seeded with rd()
+    uniform_real_distribution<double> dis(0.0, 1.0);
+
+    map<int, bool> random_dp_table;
+    for(auto iter:dp_table){
+        if(!iter.second){
+            continue;
+        }
+        //保留含有 self cycle 的 state
+        vector<DP_PT> states = all_dp_pts[iter.first];
+        bool flag = false;
+        for(int cycle=0;cycle<Parameter::k;cycle++){
+            if(states[cycle].is_self_cycle){
+                flag = true;
+                break;
+            }
+        }
+        
+        if(flag || dis(gen) <= Parameter::random_keep_ratio){
+            random_dp_table.insert(iter);
+        }
+    }
+    swap(dp_table, random_dp_table);
+}
 
 map<int, bool> Square::get_dp_table(){
     cout << "Square::get_dp_table()" << endl;
@@ -632,32 +665,6 @@ map<int, bool> Square::get_dp_table(){
                 dp_table[state_id] = true;
             }
         }
-
-        //random 亂剪枝
-        random_device rd;  // Will be used to obtain a seed for the random number engine
-        mt19937 gen(rd()); // Standard mersenne_twister_engine seeded with rd()
-        uniform_real_distribution<double> dis(0.0, 1.0);
-
-        map<int, bool> random_dp_table;
-        for(auto iter:dp_table){
-            if(!iter.second){
-                continue;
-            }
-            //保留含有 self cycle 的 state
-            vector<DP_PT> states = all_dp_pts[iter.first];
-            bool flag = false;
-            for(int cycle=0;cycle<Parameter::k;cycle++){
-                if(states[cycle].is_self_cycle){
-                    flag = true;
-                    break;
-                }
-            }
-            
-            if(flag || dis(gen) <= Parameter::random_keep_ratio){
-                random_dp_table.insert(iter);
-            }
-        }
-        swap(dp_table, random_dp_table);
 
         dp_table_isable = true;
         return dp_table;
@@ -746,31 +753,6 @@ map<int, bool> Square::get_dp_table(){
         }
         dp_table_isable = true;
         
-        //random 亂剪枝
-        random_device rd;  // Will be used to obtain a seed for the random number engine
-        mt19937 gen(rd()); // Standard mersenne_twister_engine seeded with rd()
-        uniform_real_distribution<double> dis(0.0, 1.0);
-
-        map<int, bool> random_dp_table;
-        for(auto iter:dp_table){
-            if(!iter.second){
-                continue;
-            }
-            //保留含有 self cycle 的 state
-            vector<DP_PT> states = all_dp_pts[iter.first];
-            bool flag = false;
-            for(int cycle=0;cycle<Parameter::k;cycle++){
-                if(states[cycle].is_self_cycle){
-                    flag = true;
-                    break;
-                }
-            }
-            
-            if(flag || dis(gen) <= Parameter::random_keep_ratio){
-                random_dp_table.insert(iter);
-            }
-        }
-        swap(dp_table, random_dp_table);
         return dp_table;
     }
 
@@ -782,7 +764,6 @@ map<int, bool> Square::get_dp_table(){
             children_dp_table[i] = children[i]->get_dp_table();
         }
     }
-    
 
 
     cout << "merge" << endl;
@@ -881,31 +862,6 @@ map<int, bool> Square::get_dp_table(){
         }
     }
 
-    //random 亂剪枝
-    random_device rd;  // Will be used to obtain a seed for the random number engine
-    mt19937 gen(rd()); // Standard mersenne_twister_engine seeded with rd()
-    uniform_real_distribution<double> dis(0.0, 1.0);
-
-    map<int, bool> random_dp_table;
-    for(auto iter:dp_table){
-        if(!iter.second){
-            continue;
-        }
-        //保留含有 self cycle 的 state
-        vector<DP_PT> states = all_dp_pts[iter.first];
-        bool flag = false;
-        for(int cycle=0;cycle<Parameter::k;cycle++){
-            if(states[cycle].is_self_cycle){
-                flag = true;
-                break;
-            }
-        }
-        
-        if(flag || dis(gen) <= Parameter::random_keep_ratio){
-            random_dp_table.insert(iter);
-        }
-    }
-    swap(dp_table, random_dp_table);
 
     dp_table_isable = true;
 
