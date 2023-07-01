@@ -11,7 +11,7 @@ using namespace std;
 class AlgorithmBase{
     string algorithm_name;
 protected:
-    Input input;
+    const Input input;
     map<string, double> result;
 public:
     AlgorithmBase(const string &algo_name, const Input &_input);

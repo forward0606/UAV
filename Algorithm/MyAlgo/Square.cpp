@@ -13,10 +13,10 @@ DP_PT::DP_PT(int _id, map<int, int> _p, int _T_id, bool _is_self_cycle)
     :id(_id), p(_p), T_id(_T_id), is_self_cycle(_is_self_cycle){}
 
 bool DP_PT::operator<(const DP_PT &r)const{
-    if(id != r.id){
-        return id < r.id;
+    if(T_id != r.T_id){
+        return T_id < r.T_id;
     }
-    return T_id < r.T_id;
+    return id < r.id;
 }
 
 int Square::get_id(){

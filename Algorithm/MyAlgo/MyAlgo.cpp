@@ -1,8 +1,8 @@
 #include"MyAlgo.h"
 
 
-MyAlgo::MyAlgo(const Input &_input):AlgorithmBase("MyAlgo", _input){
-    root = nullptr;
+MyAlgo::MyAlgo(const Input &_input)
+    :AlgorithmBase("MyAlgo", _input), root(nullptr), L(0), L_plum(0), ratio(1){
 }
 
 double MyAlgo::farthest_pair(){
@@ -66,17 +66,17 @@ double MyAlgo::run(){
     // #pragma omp parallel for schedule(dynamic,1) collapse(2)
     for(int a = 0;a<(int)L;a++){
         for(int b = 0;b<(int)L;b++){
-            MyAlgo *p = new MyAlgo(input);
-            p->rescale(a, b);
-            p->make_tree();
-            p->tree_travse();
-            auto res = p->get_dp_table();
+            MyAlgo p(input);
+            p.rescale(a, b);
+            p.make_tree();
+            p.tree_travse();
+            auto res = p.get_dp_table();
             auto it = res.find(0);
             if( it != res.end() && it->second){
                 
-                omp_set_lock(&writelock);
+                //omp_set_lock(&writelock);
                 flag = true;          
-                omp_unset_lock(&writelock);
+                //omp_unset_lock(&writelock);
 
                 cerr<<"("<<a<<", "<<b<<") = "<<it->second<<endl;
             }
@@ -85,7 +85,6 @@ double MyAlgo::run(){
                 cerr<<"id: "<<it.first<<", value "<<it.second<<endl;
             }
             cerr<<endl;
-            delete p;
         }
     }
     return flag;
