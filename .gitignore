@@ -3,4 +3,5 @@
 gg*
 *.gch
 .vscode/
-test
+test*
+stderr*

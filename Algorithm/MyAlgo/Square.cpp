@@ -940,6 +940,7 @@ Square::Square(Coord _upleft, Coord _downright, vector<Coord> _node_list, Square
     }
     z = max(z, (int)T.size());
     all_dp_pts.clear();
+    all_dp_pts_isable = false;
 }
 
 

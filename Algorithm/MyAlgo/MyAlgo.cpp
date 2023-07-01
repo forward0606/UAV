@@ -47,9 +47,13 @@ void MyAlgo::rescale(double a, double b){// with random shift parameter (a, b)
         // 超越？！ --> 0
         s.insert(Coord(round((i.x - up_left.x + a) * ratio / block) * block, round((i.y - down_right.y + b) * ratio / block) * block));
     }
+    cout<<"after rescaled("<<a<<", "<<b<<")"<<endl;
+    cout<<"ratio = "<<ratio<<endl;
     for(auto e:s){
         v.emplace_back(e);
+        cout<<e.x<<" "<<e.y<<endl;
     }
+    cout<<"new B is "<<input.get_B() * ratio * (1 + Parameter::epsilon)<<endl;
     scaled_input.set_nodes(v);
     L = L * ratio;
     // set cost B
@@ -58,14 +62,15 @@ void MyAlgo::rescale(double a, double b){// with random shift parameter (a, b)
 
 double MyAlgo::run(){
     bool flag = false;
-    omp_lock_t writelock;
-    omp_init_lock(&writelock);
+    //omp_lock_t writelock;
+    //omp_init_lock(&writelock);
     // #pragma omp parallel for schedule(dynamic,1)
     rescale(0, 0);
     cerr<<"L = "<<L<<endl;
     // #pragma omp parallel for schedule(dynamic,1) collapse(2)
     for(int a = 0;a<(int)L;a++){
         for(int b = 0;b<(int)L;b++){
+            cerr<<"("<<a<<", "<<b<<") = "<<endl;
             MyAlgo p(input);
             p.rescale(a, b);
             p.make_tree();
