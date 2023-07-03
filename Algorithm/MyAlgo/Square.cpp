@@ -238,6 +238,10 @@ void Square::find_all_dp_pts(){
     if(all_dp_pts_isable){
         return;
     }
+    if(Parameter::k == 0){
+        all_dp_pts_isable = true;
+        return;
+    }
     vector<DP_PT> states;
     find_all_dp_pts(states);
     all_dp_pts_isable = true;
@@ -684,7 +688,7 @@ map<int, bool> Square::get_dp_table(){
                     continue;
                 }
                 double distance_sum = 0;
-                bool flag = true;                   //eliminate self cycle
+                bool flag = true;                   // eliminate self cycle
                 int self_cycle = 0;
                 for(auto it:st.p){
                     pair<Portal_id, Portal_id> last = portal_pairs[it.first];
@@ -769,7 +773,9 @@ map<int, bool> Square::get_dp_table(){
     cout << "merge" << endl;
     // merge
     find_all_dp_pts();
-    #pragma omp parallel for
+    omp_lock_t writelock;
+    omp_init_lock(&writelock);
+    // #pragma omp parallel for
     for(int state_id = 0;state_id < (int)all_dp_pts.size();state_id++){
         vector<DP_PT> states = all_dp_pts[state_id];
         bool is_good_state = true;
@@ -858,10 +864,11 @@ map<int, bool> Square::get_dp_table(){
             }while(next_permutation(states0.begin(), states0.end()));
         }
         if(is_good_state){
+            omp_set_lock(&writelock);
             dp_table[state_id] = true;
+            omp_unset_lock(&writelock);
         }
     }
-
 
     dp_table_isable = true;
 
@@ -929,14 +936,19 @@ Square::Square(Coord _upleft, Coord _downright, vector<Coord> _node_list, Square
     // squares.emplace_back(this);
     T.clear();
     double L = algoptr -> get_L();
+    double B = algoptr -> get_scaled_input().get_B();
     L *= L;
     L /= (1 << depth);
     L /= Parameter::m + 1;
-    L = min(L, algoptr -> get_scaled_input().get_B());
-    double alpha = _upleft.y - _downright.y;
+    L *= Parameter::r * 2;
+    L = min(L, B);
+    double alpha = (_upleft.y - _downright.y) / (Parameter::m + 1);
     while(alpha < L){
         T.emplace_back(alpha);
         alpha *= (1 + Parameter::epsilon_plum);
+    }
+    if(T.size() == 0){
+        T.emplace_back(B);
     }
     z = max(z, (int)T.size());
     all_dp_pts.clear();
