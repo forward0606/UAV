@@ -69,7 +69,8 @@ double MyAlgo::run(){
     cerr<<"L = "<<L<<endl;
     // #pragma omp parallel for schedule(dynamic,1) collapse(2)
     for(int a = 0;a<(int)L;a++){
-        for(int b = 0;b<(int)L;b++){
+      for(int b = 0;b<(int)L;b++){
+    // double a = 0, b = 0;
             cerr<<"("<<a<<", "<<b<<") = "<<endl;
             MyAlgo p(input);
             p.rescale(a, b);
@@ -90,7 +91,7 @@ double MyAlgo::run(){
                 cerr<<"id: "<<it.first<<", value "<<it.second<<endl;
             }
             cerr<<endl;
-        }
+       }
     }
     return flag;
 }

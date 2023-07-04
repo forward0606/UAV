@@ -684,7 +684,7 @@ map<int, bool> Square::get_dp_table(){
             bool cycle_pass = false;                // exist any cycle can go through the internal node
             for(DP_PT st:states){
                 if(st.is_self_cycle){
-                    is_good_state = true;
+                    cycle_pass = true;
                     continue;
                 }
                 double distance_sum = 0;
@@ -749,7 +749,6 @@ map<int, bool> Square::get_dp_table(){
                         cycle_pass = true;
                     }
                 }
-
             }
             if(is_good_state && cycle_pass){
                 dp_table[state_id] = true;
@@ -765,7 +764,7 @@ map<int, bool> Square::get_dp_table(){
     // #pragma omp parallel for
     for(int i = 0;i < 4;i++){
         if(children[i] != nullptr){
-            children_dp_table[i] = children[i]->get_dp_table();
+            children_dp_table[i] = (children[i]->get_dp_table());
         }
     }
 
@@ -775,10 +774,10 @@ map<int, bool> Square::get_dp_table(){
     find_all_dp_pts();
     omp_lock_t writelock;
     omp_init_lock(&writelock);
-    // #pragma omp parallel for
+    #pragma omp parallel for
     for(int state_id = 0;state_id < (int)all_dp_pts.size();state_id++){
         vector<DP_PT> states = all_dp_pts[state_id];
-        bool is_good_state = true;
+        bool is_good_state = false;
         for(auto p0:children_dp_table[0]){
             vector<DP_PT> states0 = all_dp_pts[p0.first];
             if(!p0.second){
@@ -942,12 +941,13 @@ Square::Square(Coord _upleft, Coord _downright, vector<Coord> _node_list, Square
     L /= Parameter::m + 1;
     L *= Parameter::r * 2;
     L = min(L, B);
+    T.emplace_back(0);
     double alpha = (_upleft.y - _downright.y) / (Parameter::m + 1);
     while(alpha < L){
         T.emplace_back(alpha);
         alpha *= (1 + Parameter::epsilon_plum);
     }
-    if(T.size() == 0){
+    if(T.back() == 0){
         T.emplace_back(B);
     }
     z = max(z, (int)T.size());
