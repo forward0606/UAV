@@ -848,6 +848,8 @@ map<int, bool> Square::get_dp_table(){
                                                 if(T[states[cycle].T_id] < distance_sum){
                                                     good_cycle = false;
                                                 }
+                                            }else{
+                                                good_cycle = false;
                                             }
                                         }
                                         if(good_cycle){

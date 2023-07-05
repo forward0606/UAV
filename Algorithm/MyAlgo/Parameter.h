@@ -7,7 +7,7 @@ public:
     static const int r = 2;
     static constexpr double epsilon = 5.0;
     static constexpr double epsilon_plum = 2.0;
-    static constexpr double k = 1;
+    static constexpr double k = 3;
     static constexpr double random_keep_ratio = 0.01;
 };
 
