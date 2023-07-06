@@ -14,9 +14,9 @@ DP_PT::DP_PT(int _id, map<int, int> _p, int _T_id, bool _is_self_cycle)
 
 bool DP_PT::operator<(const DP_PT &r)const{
     if(T_id != r.T_id){
-        return T_id < r.T_id;
+        return id < r.id;
     }
-    return id < r.id;
+    return T_id < r.T_id;
 }
 
 int Square::get_id(){
@@ -793,6 +793,7 @@ map<int, bool> Square::get_dp_table(){
     for(int state_id = 0;state_id < (int)all_dp_pts.size();state_id++){
         vector<DP_PT> states = all_dp_pts[state_id];
         bool is_good_state = false;
+        int permutation_limit = Parameter::threshold;
         for(auto p0:children_dp_table[0]){
             vector<DP_PT> states0 = all_dp_pts[p0.first];
             if(!p0.second){
@@ -853,6 +854,10 @@ map<int, bool> Square::get_dp_table(){
                                         continue;
                                     }
                                     do{
+                                        permutation_limit--;
+                                        if(!permutation_limit){
+                                            goto dp_table_store;
+                                        }
                                         bool good_cycle = true;
                                         for(int cycle=0;cycle<Parameter::k;cycle++){
                                             if(allow_merge(states[cycle], states0[cycle], states1[cycle], states2[cycle], states3[cycle])){
@@ -869,6 +874,7 @@ map<int, bool> Square::get_dp_table(){
                                         }
                                         if(good_cycle){
                                             is_good_state = true;
+                                            goto dp_table_store;
                                         }
                                     }while(next_permutation(states3.begin(), states3.end()));
                                 }
@@ -879,6 +885,7 @@ map<int, bool> Square::get_dp_table(){
                 }
             }while(next_permutation(states0.begin(), states0.end()));
         }
+        dp_table_store:
         if(is_good_state){
             omp_set_lock(&writelock);
             dp_table[state_id] = true;

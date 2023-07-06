@@ -9,6 +9,7 @@ public:
     static constexpr double epsilon_plum = 2.0;
     static constexpr double k = 4;
     static constexpr double random_keep_ratio = 0.01;
+    static const int threshold = 100;
 };
 
 #endif
