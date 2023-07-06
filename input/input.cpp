@@ -24,7 +24,7 @@ Input::Input(const Input& r){
 
 
 Input::Input(){
-    B = 1.5;
+    B = 60;
     nodes.clear();
     nodes.emplace_back(12, 12);
     nodes.emplace_back(18, 12);

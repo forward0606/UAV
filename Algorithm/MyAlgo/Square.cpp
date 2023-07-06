@@ -32,9 +32,9 @@ void Square::find_portal_pairs(){
     cout << "find portal pairs" << endl;
     portal_pairs.clear();
     
-    portal_pairs.emplace_back(Portal_id(0, 0), Portal_id(3, 0));
-    portal_pairs.emplace_back(Portal_id(1, 0), Portal_id(2, 0));
-    return;
+    // portal_pairs.emplace_back(Portal_id(0, 0), Portal_id(3, 0));
+    // portal_pairs.emplace_back(Portal_id(1, 0), Portal_id(2, 0));
+    // return;
     
     vector<Portal_id> v;
     for(int dir = 0;dir < 4;dir++){

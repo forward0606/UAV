@@ -78,14 +78,29 @@ double MyAlgo::run(){
             p.make_tree();
             p.tree_travse();
             auto res = p.get_dp_table();
-            auto it = res.find(0);
-            if( it != res.end() && it->second){
+            bool is_able = false;
+            for(auto it:res){
+                cout<<it.first<<'\n';
+                vector<DP_PT> state = Square::all_dp_pts[it.first];
+                bool is_good_state = true;
+                for(DP_PT st:state){
+                    if(!st.is_self_cycle){
+                        is_good_state = false;
+                        break;
+                    }
+                }
+                if(is_good_state){
+                    is_able = true;
+                    break;
+                }
+            }
+            if(is_able){
                 
                 //omp_set_lock(&writelock);
                 flag = true;          
                 //omp_unset_lock(&writelock);
-
-                cerr<<"("<<a<<", "<<b<<") = "<<it->second<<endl;
+                cerr << "true" << endl;
+                // cerr<<"("<<a<<", "<<b<<") = "<<it->second<<endl;
             }
             cerr<<"dp table on root"<<endl;
             for(auto it:res){
