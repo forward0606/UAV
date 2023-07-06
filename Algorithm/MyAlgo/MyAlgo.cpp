@@ -70,7 +70,7 @@ double MyAlgo::run(){
     // #pragma omp parallel for schedule(dynamic, 1) collapse(2)
     for(int a = 0;a<(int)L;a++){
       for(int b = 0;b<(int)L;b++){
-        // double a = 2, b = 0;
+        //double a = 3, b = 0;
             cout<<"("<<a<<", "<<b<<") = "<<endl;
             cerr<<"("<<a<<", "<<b<<") = "<<endl;
             MyAlgo p(input);
